@@ -80,4 +80,4 @@ if __name__ == "__main__":
     print("Creating placeholder categories ... ")
     create_placeholder_categories(args.flavor_file, args.molecule_xyz_file, int(args.num_molecules),
                                   args.output_temp_dir)
-    print("Done")
+    print("Done, from dev branch")
