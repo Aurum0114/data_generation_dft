@@ -186,6 +186,7 @@ def PrepTMInputNormal(moldir, coords, elements):
 
 # define file preperation
 def prep_define_file_uhf_1(dft_settings, charge):
+
     basisset = dft_settings["turbomole_basis"]
     functional = dft_settings["turbomole_functional"]
 
@@ -195,6 +196,7 @@ def prep_define_file_uhf_1(dft_settings, charge):
         from io import StringIO as mStringIO
 
     outfile = mStringIO()
+    
     outfile.write("\n\n\n\n\na coord\n*\nno\n")
     outfile.write("\n\nb all %s\n\n\n" % basisset)
     #if charge !=0: #== +1 or charge == -1
@@ -313,13 +315,12 @@ def ExecuteDefineString(instring):
 
     process = subprocess.Popen(["define"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=setulimit, encoding='utf8')
     out, err = process.communicate(input = instring)
-
     if "normally" in err.split():
         return
     if "normally" not in err.split():
         print("ERROR in define")
-        print("STDOUT was: %s" % (out))
-        print("STDERR was: %s" % (err))
+        print("STDOUT was: %s"%(out))
+        print("STDERR was: %s"%(err))
         print("Now printing define input:")
         print("--------------------------")
         print(instring)
@@ -330,6 +331,24 @@ def ExecuteDefineString(instring):
 
 def setulimit():
     resource.setrlimit(resource.RLIMIT_STACK,(-1,resource.RLIM_INFINITY))
+
+def getTMEnergies(moldir):
+    eigerfile=open("%s/eiger.out"%(moldir),"r")
+    eigerlines=eigerfile.readlines()
+    eigerfile.close()
+    total_energy=0.0
+    energy_homo=0.0
+    energy_lumo=0.0
+    for eigerline in eigerlines:
+        if len(eigerline.split())!=0:
+            if eigerline.split()[0]=="Total":
+                total_energy=eigerline.split()[6]
+            elif eigerline.split()[0]=="HOMO:":
+                energy_homo=eigerline.split()[8]
+            elif eigerline.split()[0]=="LUMO:":
+                energy_lumo=eigerline.split()[8]
+                break
+    return([float(energy_homo),float(energy_lumo),float(total_energy)])
 
 #----------------------------------------------------read out calculation results
 
@@ -409,20 +428,20 @@ def read_dft_hess():
     return(hess, vibspectrum, reduced_masses)
 
 def getTMEnergies(moldir):
-    eigerfile = open("%s/eiger.out"%(moldir),"r")
-    eigerlines = eigerfile.readlines()
+    eigerfile=open("%s/eiger.out"%(moldir),"r")
+    eigerlines=eigerfile.readlines()
     eigerfile.close()
-    total_energy = 0.0
-    energy_homo = 0.0
-    energy_lumo = 0.0
+    total_energy=0.0
+    energy_homo=0.0
+    energy_lumo=0.0
     for eigerline in eigerlines:
-        if len(eigerline.split()) != 0:
-            if eigerline.split()[0] == "Total":
-                total_energy = eigerline.split()[6]
-            elif eigerline.split()[0] == "HOMO:":
-                energy_homo = eigerline.split()[8]
-            elif eigerline.split()[0] == "LUMO:":
-                energy_lumo = eigerline.split()[8]
+        if len(eigerline.split())!=0:
+            if eigerline.split()[0]=="Total":
+                total_energy=eigerline.split()[6]
+            elif eigerline.split()[0]=="HOMO:":
+                energy_homo=eigerline.split()[8]
+            elif eigerline.split()[0]=="LUMO:":
+                energy_lumo=eigerline.split()[8]
                 break
     return([float(energy_homo),float(energy_lumo),float(total_energy)])
 
