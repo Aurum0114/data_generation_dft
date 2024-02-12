@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=00:30:00
+#SBATCH --mem=1000
+#SBATCH --partition=single
+#SBATCH --output=log/job%j.output
+#SBATCH --error=log/job%j.error
+#SBATCH --job-name=all_flav_ammonia
+
+source /opt/bwhpc/common/devel/miniconda3/etc/profile.d/conda.sh
+
+conda activate dft_data_generation
+
+module load chem/turbomole/7.7.1
+
+export PYTHONPATH=~/dft_data_generation/
+export PYTHONPATH=~/dft_data_generation/utils/
+
+python create_placeholder_categories.py /home/kit/iti/mt4181/dft_data_generation/input_files/flavours.json /home/kit/iti/mt4181/dft_data_generation/input_files/Ala_cap_rad.xyz 1 /home/kit/iti/mt4181/test1/placeholder_cat
