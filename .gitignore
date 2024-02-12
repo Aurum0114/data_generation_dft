@@ -222,7 +222,4 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,linux
-.vscode/linenote/utils/dft_utils.py#L120.md
-.vscode/linenote/utils/dft_utils.py#L193-L196.md
-.vscode/linenote/utils/xyz_utils.py#L13.md
-.vscode/linenote/utils/xyz_utils.py#L83.md
+.vscode/linenote/**/*.md
