@@ -17,4 +17,4 @@ module load chem/turbomole/7.7.1
 export PYTHONPATH=~/dft_data_generation/
 export PYTHONPATH=~/dft_data_generation/utils/
 
-python calculate_energies_for_categories.py /home/kit/iti/mt4181/test1/placeholder_cat /home/kit/iti/mt4181/test1/results_dir
+python calculate_energies_for_categories.py /home/kit/iti/mt4181/test1/placeholder_cat /home/kit/iti/mt4181/test1/results_dir 5
