@@ -15,19 +15,6 @@ dft_settings = {"copy_mos":False,
                 "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
                 "turbomole_functional": "bmk"} #  BMK?? b3-lyp
 
-def qm_task(identifier, data): 
-    coords = data[0]
-    elements = data[1]
-    settings = data[2]
-    if settings["qm_method"] == "xtb":
-        results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
-    elif settings["qm_method"] == "dft":
-        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=True)
-    else:
-        results = {}
-    return (results)
-
-
 def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     """
     Function that calculates energies for placeholder categories
@@ -94,6 +81,19 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
             # gradients_all.append(results_here["gradient"].tolist())
     # process pool is closed automatically
     return energies_all
+
+
+def qm_task(identifier, data): 
+    coords = data[0]
+    elements = data[1]
+    settings = data[2]
+    if settings["qm_method"] == "xtb":
+        results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
+    elif settings["qm_method"] == "dft":
+        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=True)
+    else:
+        results = {}
+    return (results)
 
 
 def find_all_task_dirs(path_to_tasks): 
