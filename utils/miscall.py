@@ -1,16 +1,8 @@
 import os
-import sys
 import numpy as np
-import scipy.spatial as scsp
-import resource
-import time
-import random
-import subprocess
 import shutil
 import uuid
 import getpass
-import socket
-import yaml
 import warnings
 
 import utils.dft_utils as dft

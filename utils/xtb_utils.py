@@ -1,11 +1,8 @@
 from __future__ import print_function
 from __future__ import absolute_import
-import shutil
 import uuid
 import os
-import sys
 import numpy as np
-import time
 import subprocess
 import shlex
 import yaml

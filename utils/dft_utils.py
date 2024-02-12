@@ -1,18 +1,10 @@
 #!/usr/bin/env python
 import os
-import sys
 import numpy as np
-import scipy.spatial as scsp
 from io import StringIO
 import resource
-import time
-import random
 import subprocess
-import shutil
 import uuid
-import getpass
-import socket
-import yaml
 
 import utils.xyz_utils as xyz
 import utils.xtb_utils as xtb

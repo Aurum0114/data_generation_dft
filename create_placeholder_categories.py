@@ -4,7 +4,6 @@ import math
 import os
 import random
 import shutil
-import utils as u
 import numpy as np
 
 import utils.xyz_utils as xyz
