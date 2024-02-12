@@ -9,6 +9,11 @@ import utils.dft_utils as dft
 import utils.xtb_utils as xtb
 import utils.xyz_utils as xyz
 
+dft_settings = {"copy_mos":False,
+                "use_dispersions": True,
+                "turbomole_method": "ridft",
+                "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
+                "turbomole_functional": "bmk"} #  BMK?? b3-lyp
 
 def qm_task(identifier, data): 
     coords = data[0]
@@ -17,7 +22,7 @@ def qm_task(identifier, data):
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
-        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
+        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=True)
     else:
         results = {}
     return (results)
@@ -31,9 +36,9 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     :param number_of_workers: number of workers
     :return:
     """
-    # load flavor information from placeholder category dir
+    # load flavour information from placeholder category dir
     with open(os.path.join(path_to_task, "info.json"), 'r') as fp:
-        flavor_def = json.load(fp)
+        flavour_def = json.load(fp)
 
     xyz_files = []
     for x in os.listdir(path_to_task):
@@ -49,7 +54,7 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     assert len(coords_all) == len(elements_all)
     num_calcs = len(coords_all)
 
-    task_settings = create_flavor_setting(base_settings=settings, flavor_def=flavor_def)
+    task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
 
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
 
@@ -100,9 +105,9 @@ def find_all_task_dirs(path_to_tasks):
     return all_task_dirs
 
 
-def create_flavor_setting(base_settings, flavor_def): 
+def create_flavour_setting(base_settings, flavour_def): 
     task_settings = copy.deepcopy(base_settings)
-    task_settings["turbomole_functional"] = flavor_def["functional"]
-    task_settings["turbomole_basis"] = flavor_def["basisset"]
+    task_settings["turbomole_functional"] = flavour_def["functional"]
+    task_settings["turbomole_basis"] = flavour_def["basisset"]
 
     return task_settings
