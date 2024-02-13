@@ -69,6 +69,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
         energies_all = []
         # gradients_all = []
         for molidx, results_here in enumerate(results.get()):
+            print("results_here: ", results_here)
             print("Got result: {}".format(results_here["energy"]), flush=True)
             # sanity check:
             coords_i = items[molidx][1][0]
