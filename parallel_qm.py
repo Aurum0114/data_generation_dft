@@ -73,6 +73,8 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
             # sanity check:
             coords_i = items[molidx][1][0]
             assert coords_all[molidx] == coords_i
+            print("results_here[coords]: ", results_here["coords"]) 
+            print("coords_all[moldix]: ", coords_all[molidx])
             diff = np.array(results_here["coords"]) - np.array(coords_all[molidx])
             if np.max(np.abs(diff)) > 1e-5:
                 print("WARNING: the coordinates of molecule {} do not agree with results".format(molidx))
@@ -98,6 +100,7 @@ def qm_task(identifier, data):
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
         results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
+        print("dft successfully finished!!!")
     else:
         results = {}
     
