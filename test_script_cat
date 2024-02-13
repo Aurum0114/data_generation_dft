@@ -17,4 +17,4 @@ module load chem/turbomole/7.7.1
 export PYTHONPATH=~/dft_data_generation/
 export PYTHONPATH=~/dft_data_generation/utils/
 
-python create_placeholder_categories.py /home/kit/iti/mt4181/dft_data_generation/input_files/flavours.json /home/kit/iti/mt4181/dft_data_generation/input_files/Ala_cap_rad.xyz 1 /home/kit/iti/mt4181/test1/placeholder_cat
+python create_placeholder_categories.py /home/kit/iti/mt4181/dft_data_generation/input_files/small_flavours.json /home/kit/iti/mt4181/dft_data_generation/input_files/Ala_cap_rad.xyz 1 /home/kit/iti/mt4181/test1/placeholder_cat

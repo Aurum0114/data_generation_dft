@@ -82,7 +82,8 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
     return energies_all
 
 
-def qm_task(identifier, data): 
+def qm_task(identifier, data):
+    print(identifier)
     coords = data[0]
     elements = data[1]
     settings = data[2]
