@@ -101,7 +101,7 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
 
     results = {"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
     print("dft_calc results are: ", results)
-    
+
     return(results)
 
 
@@ -312,6 +312,19 @@ def ExecuteDefineString(instring):
 
     process = subprocess.Popen(["define"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=setulimit, encoding='utf8')
     out, err = process.communicate(input = instring)
+
+    if process.returncode != 0:  # Check if the subprocess returned an error
+        print("ERROR in define")
+        print("Return code:", process.returncode)
+        print("STDOUT was:", out)
+        print("STDERR was:", err)
+        print("Now printing define input:")
+        print("--------------------------")
+        print(instring)
+        print("--------------------------")
+        with open("define.input", 'w') as defineinput:
+            defineinput.write(instring)
+            
     if "normally" in err.split():
         return
     if "normally" not in err.split():
