@@ -100,16 +100,19 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
         os.system("rm -r %s" % (rundir))
 
     results = {"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
+    print("dft_calc results are: ", results)
+    
     return(results)
 
 
-def RunTMCalculation(moldir, dft_settings,charge, uhf = None, disp=False, pop = False, water = False):
-    startdir=os.getcwd()
+def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop = False, water = False):
+    startdir = os.getcwd()
     os.chdir(moldir)
     
     #create define string
     if uhf == None or uhf == 1:
         instring = prep_define_file_uhf_1(dft_settings, charge)
+        print("Instring is: ", instring)
         
     if uhf == 3:
         instring = prep_define_file_uhf_3(dft_settings, charge)
@@ -155,7 +158,7 @@ def RunTMCalculation(moldir, dft_settings,charge, uhf = None, disp=False, pop = 
             finished=True
             break
     if number_of_iterations!=None:
-        print("   ---   converged after %i iterations"%(number_of_iterations))
+        print("   ---   converged after %i iterations" %(number_of_iterations))
     else:
         pass
 
@@ -213,6 +216,8 @@ def prep_define_file_uhf_1(dft_settings, charge):
 
     returnstring = outfile.getvalue()
     outfile.close()
+
+    print("Define file is: ", returnstring)
     return returnstring
 
 def prep_define_file_uhf_3(dft_settings, charge):

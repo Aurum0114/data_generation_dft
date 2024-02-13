@@ -20,8 +20,11 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
     base_settings = {"qm_method": "dft",  # "dft" or "dft"
                      "delete_calculation_dirs": False,
                      "copy_mos": False,
-                     "use_dispersions": False,
-                     "turbomole_method": "ridft"
+                     "use_dispersions": True,
+                     "turbomole_method": "ridft",
+                     "partial_chrg": False,
+                     "unp_el": 1,
+                     "h20": False,
                      }
 
     all_todo_task_dirs = find_all_task_dirs(path_to_temp_tasks)
@@ -46,5 +49,6 @@ if __name__ == "__main__":
     parser.add_argument('num_workers')
     args = parser.parse_args()
     print("Calculating energies ...")
+    print("main function arguments are: ", args.temp_dir, args.output_dir, args.num_workers)
     calculate_energies_for_categories(args.temp_dir, args.output_dir, int(args.num_workers))
     print("Done")

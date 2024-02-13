@@ -43,12 +43,14 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
 
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
+    print(items)
 
     if not os.path.exists("calculations"):
         os.makedirs("calculations")
 
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
 
+    print("energ_for_task results are: ", energies)
     return energies
 
 
@@ -79,6 +81,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
             energies_all.append(results_here["energy"])
             # gradients_all.append(results_here["gradient"].tolist())
     # process pool is closed automatically
+    print("energ_for_items results are: ", energies_all)
     return energies_all
 
 
@@ -90,9 +93,11 @@ def qm_task(identifier, data):
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
-        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=True)
+        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
     else:
         results = {}
+    
+    print("qm_task results are: ", results)
     return (results)
 
 
