@@ -25,36 +25,28 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     # load flavour information from placeholder category dir
     with open(os.path.join(path_to_task, "info.json"), 'r') as fp:
         flavour_def = json.load(fp)
-        print("flavour in calc_ene_for_task: ", flavour_def)
 
     xyz_files = []
     for x in os.listdir(path_to_task):
         if x.endswith(".xyz"):
             xyz_files.append(x)
 
-    print("first version of xyz files: ", xyz_files)
-
     if len(xyz_files) != 1:
         raise NotImplementedError
 
     xyz_file = xyz_files[0]
-    print("xyz file: ", xyz_file)
 
     coords_all, elements_all = xyz.readXYZs(os.path.join(path_to_task, xyz_file))
     assert len(coords_all) == len(elements_all)
     num_calcs = len(coords_all)
-    print("some varibles line 44: ", coords_all, elements_all, num_calcs)
 
     task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
-    print("task settings: ", task_settings)
 
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
-    print(items)
+    print("Items are: ", items)
 
     if not os.path.exists("calculations"):
         os.makedirs("calculations")
-
-    print("Final check: ", coords_all)
 
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
 
@@ -96,8 +88,12 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
 def qm_task(identifier, data):
     print(identifier)
     coords = data[0]
+    print("qm_task coords: ", coords)
     elements = data[1]
+    print("qm_task elements: ", elements)
     settings = data[2]
+    print("qm_task settings: ", settings)
+    
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
