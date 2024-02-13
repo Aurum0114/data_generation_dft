@@ -30,6 +30,8 @@ def create_tm_dir(moldir, overwrite=False):
 
 def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):
 
+    print("coords in dft_calc: ", coords)
+
     if opt and grad:
         exit("opt and grad are exclusive")
     if hess and grad:
@@ -108,7 +110,8 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
 def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop = False, water = False):
     startdir = os.getcwd()
     os.chdir(moldir)
-    print("Direcories in runTMcalcularionL", startdir, moldir)
+    print("Direcories in runTMcalcularion startdir: ", startdir)
+    print("moldir doesnt work???", moldir)
     
     #create define string
     if uhf == None or uhf == 1:
@@ -119,6 +122,7 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     if uhf == 3:
         instring = prep_define_file_uhf_3(dft_settings, charge)
     
+    print("working directory right before ExecuteDefineString:", os.getcwd())
     ExecuteDefineString(instring)
     
     # add functional to control file
