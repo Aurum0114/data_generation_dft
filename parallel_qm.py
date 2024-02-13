@@ -65,6 +65,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
     with Pool(number_of_workers) as pool:
         # issues tasks to process pool
         results = pool.starmap_async(qm_task, items)
+        print(results.get())
         # iterate results
         energies_all = []
         # gradients_all = []
