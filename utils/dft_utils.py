@@ -99,7 +99,7 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
     if dft_settings["delete_calculation_dirs"]:
         os.system("rm -r %s" % (rundir))
 
-    results={"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
+    results = {"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
     return(results)
 
 

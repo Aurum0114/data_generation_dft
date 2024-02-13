@@ -5,11 +5,10 @@ from multiprocessing.pool import Pool
 import numpy as np
 
 import utils.dft_utils as dft
-#import utils as u
 import utils.xtb_utils as xtb
 import utils.xyz_utils as xyz
 
-dft_settings = {"copy_mos":False,
+dft_settings = {"copy_mos": False,
                 "use_dispersions": True,
                 "turbomole_method": "ridft",
                 "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
