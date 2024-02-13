@@ -56,7 +56,7 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
     os.chdir(rundir) #goes to the rundir
     
     # prep coords , control
-    #PrepTMInputNormal(".", coords, elements)
+    PrepTMInputNormal(".", coords, elements)
     
     #if unp_el != None and unp_el != 0:
     print("working directory right before RunTMCalcualtion:", os.getcwd())
