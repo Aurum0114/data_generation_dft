@@ -70,7 +70,7 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
         os.system("t2x coord > opt.xyz")
         coords_new, elements_new = xtb.readXYZ("opt.xyz")
     else:
-        coords_new, elements_new = None, None
+        coords_new, elements_new = coords, elements
 
     if grad:
         grad = read_dft_grad()
