@@ -30,8 +30,6 @@ def create_tm_dir(moldir, overwrite=False):
 
 def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):
 
-    print("coords in dft_calc: ", coords)
-
     if opt and grad:
         exit("opt and grad are exclusive")
     if hess and grad:
@@ -59,7 +57,6 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
     PrepTMInputNormal(".", coords, elements)
     
     #if unp_el != None and unp_el != 0:
-    print("working directory right before RunTMCalcualtion:", os.getcwd())
     # run calculation
     RunTMCalculation(".", dft_settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
     #else:
@@ -110,19 +107,14 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
 def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop = False, water = False):
     startdir = os.getcwd()
     os.chdir(moldir)
-    print("Direcories in runTMcalcularion startdir: ", startdir)
-    print("moldir doesnt work???", moldir)
     
     #create define string
     if uhf == None or uhf == 1:
-        print("prep_define_file settings: ", dft_settings, charge)
         instring = prep_define_file_uhf_1(dft_settings, charge)
-        print("Instring is: ", instring)
         
     if uhf == 3:
         instring = prep_define_file_uhf_3(dft_settings, charge)
     
-    print("working directory right before ExecuteDefineString:", os.getcwd())
     ExecuteDefineString(instring)
     
     # add functional to control file
@@ -312,7 +304,6 @@ def RemoveStatementFromControl(controlfilename, statement):
     outf.close()
 
 def ExecuteDefineString(instring):
-    print("got to EXECUTEDEFINESTRING!!!")
     instring = instring + "\n\n\n\n"
     out = ""
     err = ""

@@ -43,19 +43,15 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
 
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
-    print("Items are: ", items)
+    #print("Provided items are: ", items)
 
     if not os.path.exists("calculations"):
         os.makedirs("calculations")
 
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
 
-    print("energ_for_task results are: ", energies)
     return energies
 
-def my_callback(result):
-    print("callback from starmap_async:")
-    print("Computation complete. Result:", result)
 
 def calc_energies_for_items(items, number_of_workers, coords_all):
     """
@@ -67,19 +63,16 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
     """
     with Pool(number_of_workers) as pool:
         # issues tasks to process pool
-        results = pool.starmap_async(qm_task, items, callback=my_callback)
+        results = pool.starmap_async(qm_task, items).get()
 
         # iterate results
         energies_all = []
         # gradients_all = []
-        for molidx, results_here in enumerate(results.get()):
-            print("results_here: ", results_here)
+        for molidx, results_here in enumerate(results):
             print("Got result: {}".format(results_here["energy"]), flush=True)
             # sanity check:
             coords_i = items[molidx][1][0]
             assert coords_all[molidx] == coords_i
-            print("results_here[coords]: ", results_here["coords"]) 
-            print("coords_all[moldix]: ", coords_all[molidx])
             diff = np.array(results_here["coords"]) - np.array(coords_all[molidx])
             if np.max(np.abs(diff)) > 1e-5:
                 print("WARNING: the coordinates of molecule {} do not agree with results".format(molidx))
@@ -91,28 +84,22 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
         pool.close()
         pool.join()
     # process pool is closed automatically
-    print("energ_for_items results are: ", energies_all)
     return energies_all
 
 
 def qm_task(identifier, data):
-    print(identifier)
+    print("Calculating task number: ", identifier)
     coords = data[0]
-    print("qm_task coords: ", coords)
     elements = data[1]
-    print("qm_task elements: ", elements)
     settings = data[2]
-    print("qm_task settings: ", settings)
     
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
         results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
-        print("dft successfully finished!!!")
     else:
         results = {}
     
-    print("qm_task results are: ", results)
     return (results)
 
 
