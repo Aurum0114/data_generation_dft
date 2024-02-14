@@ -54,6 +54,7 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     return energies
 
 def my_callback(result):
+    print("callback from starmap_async:")
     print("Computation complete. Result:", result)
 
 def calc_energies_for_items(items, number_of_workers, coords_all):
