@@ -53,6 +53,8 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     print("energ_for_task results are: ", energies)
     return energies
 
+def my_callback(result):
+    print("Computation complete. Result:", result)
 
 def calc_energies_for_items(items, number_of_workers, coords_all):
     """
@@ -64,12 +66,12 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
     """
     with Pool(number_of_workers) as pool:
         # issues tasks to process pool
-        results = pool.starmap_async(qm_task, items).get()
+        results = pool.starmap_async(qm_task, items, callback=my_callback)
 
         # iterate results
         energies_all = []
         # gradients_all = []
-        for molidx, results_here in enumerate(results):
+        for molidx, results_here in enumerate(results.get()):
             print("results_here: ", results_here)
             print("Got result: {}".format(results_here["energy"]), flush=True)
             # sanity check:
