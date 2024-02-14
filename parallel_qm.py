@@ -84,6 +84,8 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
                 # results_here["gradient"] = None
             energies_all.append(results_here["energy"])
             # gradients_all.append(results_here["gradient"].tolist())
+            pool.close()
+            pool.join()
     # process pool is closed automatically
     print("energ_for_items results are: ", energies_all)
     return energies_all
