@@ -4,9 +4,9 @@ import math
 import os
 import random
 import shutil
-import utils as u
 import numpy as np
 
+import utils.xyz_utils as xyz
 
 def create_placeholder_categories(flavour_file, molecule_xyz_file, num_molecules, output_temp_dir):
     """
@@ -49,7 +49,7 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, num_molecules
     num_digits_needed = math.ceil(np.log10(num_flavours))
     for single_flavour in dft_flavours:
         # sample X molecules
-        coords_all, elements_all = u.readXYZs(molecule_xyz_file)
+        coords_all, elements_all = xyz.readXYZs(molecule_xyz_file)
         assert len(coords_all) == len(elements_all)
         num_all_mol = len(coords_all)
         sampled_indices = random.sample(range(num_all_mol), int(single_flavour["num_molecules"]))
@@ -63,7 +63,7 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, num_molecules
 
         os.mkdir(task_dir_path)
 
-        u.exportXYZs(coords, elements, os.path.join(task_dir_path, task_coord_filename))
+        xyz.exportXYZs(coords, elements, os.path.join(task_dir_path, task_coord_filename))
 
         with open(os.path.join(task_dir_path, "info.json"), 'w') as fp:
             json.dump(single_flavour, fp)

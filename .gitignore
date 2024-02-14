@@ -222,3 +222,5 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,linux
+.vscode/linenote/**/*.md
+input/tasks/T_1_bmk###6-311++G**/data_01_bmk###6-311++G**.xyz
