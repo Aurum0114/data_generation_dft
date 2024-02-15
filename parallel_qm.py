@@ -45,9 +45,6 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
     #print("Provided items are: ", items)
 
-    if not os.path.exists("calculations"):
-        os.makedirs("calculations")
-
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
 
     return energies
