@@ -4,6 +4,7 @@ import numpy as np
 from io import StringIO
 import resource
 import subprocess
+import datetime
 import uuid
 
 import utils.xyz_utils as xyz
@@ -40,7 +41,8 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
     if dirname is None:
-        rundir="dft_tmpdir_%s"%(uuid.uuid4()) #creates a new temporary directory
+        current_time = datetime.datetime.now().strftime("%H%M_%d%m%Y%")
+        rundir="dft_tmpdir_%s"%(current_time) #creates a new temporary directory
     else:
         rundir = dirname
     
