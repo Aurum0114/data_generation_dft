@@ -331,7 +331,12 @@ def setulimit():
     resource.setrlimit(resource.RLIMIT_STACK,(-1,resource.RLIM_INFINITY))
 
 def getTMEnergies(moldir):
-    eigerfile=open("%s/eiger.out"%(moldir),"r")
+
+    try:
+        eigerfile=open("%s/eiger.out"%(moldir),"r")
+    except FileNotFoundError as err:
+        raise FileNotFoundError("the eiger.out file is not found, was searching in directory", moldir)
+
     eigerlines=eigerfile.readlines()
     eigerfile.close()
     total_energy=0.0
@@ -425,23 +430,27 @@ def read_dft_hess():
 
     return(hess, vibspectrum, reduced_masses)
 
-def getTMEnergies(moldir):
-    eigerfile=open("%s/eiger.out"%(moldir),"r")
-    eigerlines=eigerfile.readlines()
-    eigerfile.close()
-    total_energy=0.0
-    energy_homo=0.0
-    energy_lumo=0.0
-    for eigerline in eigerlines:
-        if len(eigerline.split())!=0:
-            if eigerline.split()[0]=="Total":
-                total_energy=eigerline.split()[6]
-            elif eigerline.split()[0]=="HOMO:":
-                energy_homo=eigerline.split()[8]
-            elif eigerline.split()[0]=="LUMO:":
-                energy_lumo=eigerline.split()[8]
-                break
-    return([float(energy_homo),float(energy_lumo),float(total_energy)])
+#def getTMEnergies(moldir):
+#    try:
+#        eigerfile=open("%s/eiger.out"%(moldir),"r")
+#    except FileNotFoundError as err:
+#        print("")
+#        
+#    eigerlines=eigerfile.readlines()
+#    eigerfile.close()
+#    total_energy=0.0
+#    energy_homo=0.0
+#    energy_lumo=0.0
+#    for eigerline in eigerlines:
+#        if len(eigerline.split())!=0:
+#            if eigerline.split()[0]=="Total":
+#                total_energy=eigerline.split()[6]
+#            elif eigerline.split()[0]=="HOMO:":
+#                energy_homo=eigerline.split()[8]
+#            elif eigerline.split()[0]=="LUMO:":
+#                energy_lumo=eigerline.split()[8]
+#                break
+#    return([float(energy_homo),float(energy_lumo),float(total_energy)])
 
 def getMullikans(outfilename="ridft.log", noOfAtoms=0):
     TMfile=open(outfilename,"r")

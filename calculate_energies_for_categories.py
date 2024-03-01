@@ -23,7 +23,7 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
                      "use_dispersions": True,
                      "turbomole_method": "ridft",
                      "partial_chrg": False,
-                     "unp_el": 1,
+                     "unp_el": 0,
                      "h20": False,
                      }
 
