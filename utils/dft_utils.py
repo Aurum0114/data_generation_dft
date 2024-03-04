@@ -18,15 +18,15 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def create_tm_dir(moldir, overwrite=False):
-    if os.path.exists(moldir) and not overwrite:
-        print('TM directory already exists and overwrite false.')
-    else:
-        try:
-            os.makedirs(moldir)
-        except FileExistsError:
-            os.system('rm -r {}/'.format(moldir))
-            os.makedirs(moldir)
+#def create_tm_dir(moldir, overwrite=False):
+#    if os.path.exists(moldir) and not overwrite:
+#        print('TM directory already exists and overwrite false.')
+#    else:
+#        try:
+#            os.makedirs(moldir)
+#        except FileExistsError:
+#            os.system('rm -r {}/'.format(moldir))
+#            os.makedirs(moldir)
 
 
 def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):

@@ -22,6 +22,7 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     :param number_of_workers: number of workers
     :return:
     """
+    print("Calculate energies for task in path: ", path_to_task)
     # load flavour information from placeholder category dir
     with open(os.path.join(path_to_task, "info.json"), 'r') as fp:
         flavour_def = json.load(fp)
@@ -39,7 +40,7 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     coords_all, elements_all = xyz.readXYZs(os.path.join(path_to_task, xyz_file))
     assert len(coords_all) == len(elements_all)
     num_calcs = len(coords_all)
-    print("The number of calculations to be perfoemed is:", num_calcs)
+    print("The number of calculations to be performed is:", num_calcs)
 
     task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
     print("Task settings are equal to:", task_settings)
