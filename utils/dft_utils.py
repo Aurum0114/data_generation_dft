@@ -42,8 +42,7 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
     if dirname is None:
-        current_time = datetime.datetime.now().strftime("%H%M_%d%m%Y%")
-        rundir="dft_tmpdir_%s"%(current_time) #creates a new temporary directory
+        rundir="dft_tmpdir_%s"%(uuid.uuid4()) #creates a new temporary directory
     else:
         rundir = dirname
     
