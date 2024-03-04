@@ -336,6 +336,8 @@ def setulimit():
 
 def getTMEnergies(moldir):
 
+    print("current directory at the start of getTMEnergies function is ", os.getcwd())
+    print("moldir is defined as: ", moldir)
     try:
         eigerfile=open("%s/eiger.out"%(moldir),"r")
     except FileNotFoundError as err:
