@@ -39,11 +39,13 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     coords_all, elements_all = xyz.readXYZs(os.path.join(path_to_task, xyz_file))
     assert len(coords_all) == len(elements_all)
     num_calcs = len(coords_all)
+    print("The number of calculations to be perfoemed is:", num_calcs)
 
     task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
+    print("Task settings are equal to:", task_settings)
 
     items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
-    #print("Provided items are: ", items)
+    print("Provided items are: ", items)
 
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
 
@@ -80,6 +82,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
         
         pool.close()
         pool.join()
+        print("The pool finished, yielding ", energies_all)
     # process pool is closed automatically
     return energies_all
 
@@ -87,8 +90,11 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
 def qm_task(identifier, data):
     print("Calculating task number: ", identifier)
     coords = data[0]
+    print("Provided coordinates for task number", identifier, " are:", coords)
     elements = data[1]
+    print("Provided elements for task number", identifier, " are:", elements)
     settings = data[2]
+    print("Provided settings for task number", identifier, " are:", settings)
     
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
@@ -96,6 +102,8 @@ def qm_task(identifier, data):
         results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
     else:
         results = {}
+    
+    print("Qm task number ", identifier, " finished with results: ", results)
     
     return (results)
 

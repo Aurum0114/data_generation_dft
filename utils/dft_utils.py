@@ -30,6 +30,7 @@ def create_tm_dir(moldir, overwrite=False):
 
 
 def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):
+    print("The dft settings in dft_calc are:", dft_settings)
 
     if opt and grad:
         exit("opt and grad are exclusive")
@@ -55,16 +56,18 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
     startdir = os.getcwd() #stores current directory
     os.chdir(rundir) #goes to the rundir
     
-    # prep coords , control
+    print("Starting to prepare input")
     PrepTMInputNormal(".", coords, elements)
     
     #if unp_el != None and unp_el != 0:
     # run calculation
+    print("Starting to run TM calculation")
     RunTMCalculation(".", dft_settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
     #else:
     #    RunTMCalculation(".", dft_settings, disp = dispersion, pop = partial_chrg)
     
-    # read out results    
+    # read out results  
+    print("TM calculation converged, reading out the results")  
     if opt:
         os.system("t2x coord > opt.xyz")
         coords_new, elements_new = xtb.readXYZ("opt.xyz")
@@ -117,6 +120,7 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     if uhf == 3:
         instring = prep_define_file_uhf_3(dft_settings, charge)
     
+    print("Starting to execute define string")
     ExecuteDefineString(instring)
     
     # add functional to control file
@@ -139,7 +143,8 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
         else:
             print("WARNING: Did not find old mos file in %s/pre_optimization"%(dft_settings["main_directory"]))
     
-    # do calculation     
+    # do calculation  
+    print("Got to the terminal interaction part of TM!")   
     if dft_settings["turbomole_method"]=="ridft":
         os.system("ridft > TM.out")
         #os.system("rdgrad > rdgrad.out")    ###removed grad
