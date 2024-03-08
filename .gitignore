@@ -226,3 +226,4 @@ pyrightconfig.json
 input/tasks/T_1_bmk###6-311++G**/data_01_bmk###6-311++G**.xyz
 todo
 parallelization_input_test.py
+.vscode/launch.json
