@@ -18,17 +18,6 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-#def create_tm_dir(moldir, overwrite=False):
-#    if os.path.exists(moldir) and not overwrite:
-#        print('TM directory already exists and overwrite false.')
-#    else:
-#        try:
-#            os.makedirs(moldir)
-#        except FileExistsError:
-#            os.system('rm -r {}/'.format(moldir))
-#            os.makedirs(moldir)
-
-
 def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):
     print("The dft settings in dft_calc are:", dft_settings)
 
@@ -172,7 +161,7 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     os.chdir(startdir)
     return(finished)
 
-#-------------------------------------------------------------preparation functions
+#------------------------------------------------------------------preparation functions
 
 def PrepTMInputNormal(moldir, coords, elements):
     coordfile = open("%s/coord"%(moldir), 'w')
@@ -334,6 +323,8 @@ def ExecuteDefineString(instring):
 def setulimit():
     resource.setrlimit(resource.RLIMIT_STACK,(-1,resource.RLIM_INFINITY))
 
+#----------------------------------------------------read out calculation results
+    
 def getTMEnergies(moldir):
 
     print("current directory at the start of getTMEnergies function is ", os.getcwd())
@@ -358,8 +349,6 @@ def getTMEnergies(moldir):
                 energy_lumo=eigerline.split()[8]
                 break
     return([float(energy_homo),float(energy_lumo),float(total_energy)])
-
-#----------------------------------------------------read out calculation results
 
 def read_dft_grad():
     if not os.path.exists("gradient"):
@@ -436,27 +425,6 @@ def read_dft_hess():
 
     return(hess, vibspectrum, reduced_masses)
 
-#def getTMEnergies(moldir):
-#    try:
-#        eigerfile=open("%s/eiger.out"%(moldir),"r")
-#    except FileNotFoundError as err:
-#        print("")
-#        
-#    eigerlines=eigerfile.readlines()
-#    eigerfile.close()
-#    total_energy=0.0
-#    energy_homo=0.0
-#    energy_lumo=0.0
-#    for eigerline in eigerlines:
-#        if len(eigerline.split())!=0:
-#            if eigerline.split()[0]=="Total":
-#                total_energy=eigerline.split()[6]
-#            elif eigerline.split()[0]=="HOMO:":
-#                energy_homo=eigerline.split()[8]
-#            elif eigerline.split()[0]=="LUMO:":
-#                energy_lumo=eigerline.split()[8]
-#                break
-#    return([float(energy_homo),float(energy_lumo),float(total_energy)])
 
 def getMullikans(outfilename="ridft.log", noOfAtoms=0):
     TMfile=open(outfilename,"r")
