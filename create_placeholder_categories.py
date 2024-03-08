@@ -43,6 +43,7 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, num_molecules
             index += 1
 
     num_flavours = len(dft_flavours)
+    print("Found number of flavours is: ", num_flavours)
 
     num_digits_needed = math.ceil(np.log10(num_flavours))
     for single_flavour in dft_flavours:
