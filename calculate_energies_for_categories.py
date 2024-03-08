@@ -37,8 +37,9 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
         energies = calculate_energies_for_task(path_to_task=path_task_todo_dir,
                                                settings=base_settings,
                                                number_of_workers=num_workers)
-        print("Saving the output files in path: ", path_task_todo_dir, output_file_name)
+        
         output_file_name = f"labels_01_energies.npy"
+        print("Saving the output files in path: ", path_task_todo_dir, '/', output_file_name)
         np.save(os.path.join(path_task_todo_dir, output_file_name), energies)
 
         # move task to done
