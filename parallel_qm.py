@@ -73,11 +73,11 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
             # sanity check:
             coords_i = items[molidx][1][0]
             assert coords_all[molidx] == coords_i
-            #diff = np.array(results_here["coords"]) - np.array(coords_all[molidx])
-            #if np.max(np.abs(diff)) > 1e-5:
-            #    print("WARNING: the coordinates of molecule {} do not agree with results".format(molidx))
-            #    results_here["energy"] = None
-                # results_here["gradient"] = None
+            diff = np.array(results_here["coords"]) - np.array(coords_all[molidx])
+            if np.max(np.abs(diff)) > 1e-5:
+                print("WARNING: the coordinates of molecule {} do not agree with results".format(molidx))
+                results_here["energy"] = None
+                results_here["gradient"] = None
             energies_all.append(results_here["energy"])
             # gradients_all.append(results_here["gradient"].tolist())
         
