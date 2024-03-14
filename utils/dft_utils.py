@@ -202,9 +202,9 @@ def prep_define_file_uhf_1(dft_settings, charge):
     if dft_settings["turbomole_method"]=="ridft":
         outfile.write("ri\non\nm1500\n\n\n\n" )
 
-    outfile.write("scf\niter\n500\n\n\n") #1000
-    #outfile.write("scf\ndsp\non\n\n\n") ## statement nicht erkannt ? 
-    outfile.write("scf\nconv\n5\n\n\n") # 7?
+    outfile.write("scf\niter\n100\n\n\n") 
+    #outfile.write("scf\ndsp\non\n\n\n") 
+    outfile.write("scf\nconv\n5\n\n\n") 
     outfile.write("\n\n\n\n*\n")
 
     returnstring = outfile.getvalue()
