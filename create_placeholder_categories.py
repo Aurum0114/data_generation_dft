@@ -49,7 +49,7 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_d
         for single_flavour in dft_flavours:
             sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
 
-    elif str(flavour_idx).isnumeric() and 1 <= int(flavour_idx) < len(dft_flavours):
+    elif str(flavour_idx).isnumeric() and 1 <= int(flavour_idx) <= len(dft_flavours):
         single_flavour = dft_flavours[flavour_idx-1]
         sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
         
