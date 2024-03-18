@@ -24,7 +24,7 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     """
     print("Calculate energies for task in path: ", path_to_task)
     # load flavour information from placeholder category dir
-    with open(os.path.join(path_to_task, "info.json"), 'r') as fp:
+    with open(os.path.join(path_to_task, "task_info.json"), 'r') as fp:
         flavour_def = json.load(fp)
 
     xyz_files = []
