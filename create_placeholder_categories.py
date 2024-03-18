@@ -79,10 +79,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('flavour_file')
     parser.add_argument('molecule_xyz_file')
-    parser.add_argument('num_molecules')
     parser.add_argument('output_temp_dir')
+    parser.add_argument('num_molecules')
+    parser.add_argument('--flavour_num', type=int, default=None)
+    
     args = parser.parse_args()
     print("Creating placeholder categories ... ")
-    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, int(args.num_molecules),
-                                  args.output_temp_dir)
+    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, args.output_temp_dir, int(args.num_molecules), args.flavour_num)
     print("Done")
