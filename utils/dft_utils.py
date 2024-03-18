@@ -18,8 +18,8 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], dirname = None, partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
-    print("The dft settings in dft_calc are:", dft_settings)
+def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], dirname = None, partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
+    print("The dft settings in dft_calc are:", settings)
 
     if opt and grad:
         exit("opt and grad are exclusive")
@@ -31,7 +31,8 @@ def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
     if dirname is None:
-        rundir="dft_tmpdir_%s"%(uuid.uuid4()) #creates a new temporary directory
+        #might add an ordinal number passed somewhere
+        rundir=f"dft_tmpdir_{settings['turbomole_functional']}_{settings['turbomole_basis']}_{uuid.uuid4().hex}_"
     else:
         rundir = dirname
     
@@ -50,7 +51,7 @@ def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess
     #if unp_el != None and unp_el != 0:
     # run calculation
     print("Starting to run TM calculation")
-    RunTMCalculation(".", dft_settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
+    RunTMCalculation(".", settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
     #else:
     #    RunTMCalculation(".", dft_settings, disp = dispersion, pop = partial_chrg)
     
@@ -83,12 +84,12 @@ def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess
     os.chdir(startdir)
 
     path_to_control = os.path.join(rundir, "control")
-    misc.check_basis_and_func(path_to_control=path_to_control, basis_todo=dft_settings["turbomole_basis"],
-                         func_todo=dft_settings["turbomole_functional"])
+    misc.check_basis_and_func(path_to_control=path_to_control, basis_todo=settings["turbomole_basis"],
+                         func_todo=settings["turbomole_functional"])
 
     #os.system("rm -r %s"%(rundir))
 
-    if dft_settings["delete_calculation_dirs"]:
+    if settings["delete_calculation_dirs"]:
         os.system("rm -r %s" % (rundir))
 
     results = {"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
@@ -97,22 +98,22 @@ def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess
     return(results)
 
 
-def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop = False, water = False):
+def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = False, water = False):
     startdir = os.getcwd()
     os.chdir(moldir)
     
     #create define string
     if uhf == None or uhf == 1:
-        instring = prep_define_file_uhf_1(dft_settings, charge)
+        instring = prep_define_file_uhf_1(settings, charge)
         
     if uhf == 3:
-        instring = prep_define_file_uhf_3(dft_settings, charge)
+        instring = prep_define_file_uhf_3(settings, charge)
     
     print("Starting to execute define string")
     ExecuteDefineString(instring)
     
     # add functional to control file
-    func = dft_settings['turbomole_functional']
+    func = settings['turbomole_functional']
     add_functional_to_control('control', func)
     
     # add other options to control file like dispersion, solution in water
@@ -124,23 +125,23 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     if pop:
         AddStatementToControl('control', '$pop')
     
-    if dft_settings["copy_mos"]:
-        if os.path.exists("%s/pre_optimization/mos"%(dft_settings["main_directory"])):
+    if settings["copy_mos"]:
+        if os.path.exists("%s/pre_optimization/mos"%(settings["main_directory"])):
             print("   ---   Copy the old mos file from precalculation")
-            os.system("cp %s/pre_optimization/mos ."%(dft_settings["main_directory"]))
+            os.system("cp %s/pre_optimization/mos ."%(settings["main_directory"]))
         else:
-            print("WARNING: Did not find old mos file in %s/pre_optimization"%(dft_settings["main_directory"]))
+            print("WARNING: Did not find old mos file in %s/pre_optimization"%(settings["main_directory"]))
     
     # do calculation  
     print("Got to the terminal interaction part of TM!")   
-    if dft_settings["turbomole_method"]=="ridft":
+    if settings["turbomole_method"]=="ridft":
         os.system("ridft > TM.out")
         #os.system("rdgrad > rdgrad.out")    ###removed grad
-    elif dft_settings["turbomole_method"]=="dscf":
+    elif settings["turbomole_method"]=="dscf":
         os.system("dscf > TM.out")
         #os.system("rdgrad > rdgrad.out")
     else:
-        exit("ERROR in turbomole_method: %s"%(dft_settings["turbomole_method"]))
+        exit("ERROR in turbomole_method: %s"%(settings["turbomole_method"]))
 
     finished=False   
     number_of_iterations=None
