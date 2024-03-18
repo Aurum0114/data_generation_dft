@@ -6,7 +6,7 @@ import shutil
 
 import utils.xyz_utils as xyz
 
-def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_dir, num_molecules, flavour_num=None):
+def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_dir, num_molecules, flavour_idx):
     """
     This function creates placeholder categories that will be used by the next function to create the actual categories.
     :flavour_file: Stores two lists: all functionals and basis sets. Example file: example_files/func_and_base.json
@@ -45,12 +45,12 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_d
     coords_all, elements_all = xyz.readXYZs(molecule_xyz_file)
     assert len(coords_all) == len(elements_all)
 
-    if flavour_num==None:
+    if flavour_idx==None:
         for single_flavour in dft_flavours:
             sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
 
-    elif str(flavour_num).isnumeric() and 1 <= int(flavour_num) < len(dft_flavours):
-        single_flavour = dft_flavours[flavour_num]
+    elif str(flavour_idx).isnumeric() and 1 <= int(flavour_idx) < len(dft_flavours):
+        single_flavour = dft_flavours[flavour_idx]
         sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
         
     else:
@@ -81,9 +81,9 @@ if __name__ == "__main__":
     parser.add_argument('molecule_xyz_file')
     parser.add_argument('output_temp_dir')
     parser.add_argument('num_molecules')
-    parser.add_argument('--flavour_num', default=None)
+    parser.add_argument('flavour_idx', default=None)
     
     args = parser.parse_args()
     print("Creating placeholder categories ... ")
-    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, args.output_temp_dir, int(args.num_molecules), args.flavour_num)
+    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, args.output_temp_dir, int(args.num_molecules), args.flavour_idx)
     print("Done")
