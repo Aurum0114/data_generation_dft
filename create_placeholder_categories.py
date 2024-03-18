@@ -6,7 +6,7 @@ import shutil
 
 import utils.xyz_utils as xyz
 
-def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_dir, num_molecules, flavour_idx):
+def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_dir, num_molecules, flavour_idx=None):
     """
     This function creates placeholder categories that will be used by the next function to create the actual categories.
     :flavour_file: Stores two lists: all functionals and basis sets. Example file: example_files/func_and_base.json
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser.add_argument('molecule_xyz_file')
     parser.add_argument('output_temp_dir')
     parser.add_argument('num_molecules')
-    parser.add_argument('flavour_idx', default=None)
+    parser.add_argument('--flavour_idx', default=None)
     
     args = parser.parse_args()
     print("Creating placeholder categories ... ")
