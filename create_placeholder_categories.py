@@ -65,7 +65,7 @@ def sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_
 
     task_coord_filename = f"data_01_{single_flavour['functional']}###{single_flavour['basisset']}.xyz"
     task_dir_path = os.path.join(temp_task_dir,
-                                f"flavour{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
+                                f"FLV_{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
 
     os.mkdir(task_dir_path)
     print(f"Creating directory {task_dir_path}")
