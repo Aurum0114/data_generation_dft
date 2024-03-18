@@ -85,5 +85,5 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     print("Creating placeholder categories ... ")
-    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, args.output_temp_dir, int(args.num_molecules), args.flavour_idx)
+    create_placeholder_categories(args.flavour_file, args.molecule_xyz_file, args.output_temp_dir, int(args.num_molecules), int(args.flavour_idx))
     print("Done")
