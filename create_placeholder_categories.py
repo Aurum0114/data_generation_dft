@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser.add_argument('molecule_xyz_file')
     parser.add_argument('output_temp_dir')
     parser.add_argument('num_molecules')
-    parser.add_argument('--flavour_num', type=int, default=None)
+    parser.add_argument('--flavour_num', default=None)
     
     args = parser.parse_args()
     print("Creating placeholder categories ... ")
