@@ -44,7 +44,6 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_d
 
     coords_all, elements_all = xyz.readXYZs(molecule_xyz_file)
     assert len(coords_all) == len(elements_all)
-    num_all_mol = len(coords_all)
 
     if flavour_num==None:
         for single_flavour in dft_flavours:
@@ -55,7 +54,7 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_d
         sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, elements_all, temp_task_dir)
         
     else:
-        raise ValueError(f'Flavour value should be an integer (index of the flavour to use), maximum value is {dft_flavours[-1]['number']}')
+        raise ValueError(f"Flavour value should be an integer (index of the flavour to use), maximum value is {dft_flavours[-1]['number']}")
     
 
 def sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, elements_all, temp_task_dir):
@@ -69,6 +68,7 @@ def sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, eleme
                                 f"flavour{dft_flavours['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
 
     os.mkdir(task_dir_path)
+    print(f"Creating directory {task_dir_path}")
     xyz.exportXYZs(coords, elements, os.path.join(task_dir_path, task_coord_filename))
 
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
