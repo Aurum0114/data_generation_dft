@@ -47,17 +47,17 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, output_temp_d
 
     if flavour_num==None:
         for single_flavour in dft_flavours:
-            sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, elements_all, temp_task_dir)
+            sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
 
     elif str(flavour_num).isnumeric() and 1 <= int(flavour_num) < len(dft_flavours):
         single_flavour = dft_flavours[flavour_num]
-        sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, elements_all, temp_task_dir)
+        sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir)
         
     else:
         raise ValueError(f"Flavour value should be an integer (index of the flavour to use), maximum value is {dft_flavours[-1]['number']}")
     
 
-def sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, elements_all, temp_task_dir):
+def sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_task_dir):
     num_all_mol = len(coords_all)
     sampled_indices = random.sample(range(num_all_mol), int(single_flavour["num_molecules"]))
     coords = [coords_all[i] for i in sampled_indices]
@@ -65,7 +65,7 @@ def sample_molecules_for_flavour(single_flavour, dft_flavours, coords_all, eleme
 
     task_coord_filename = f"data_01_{single_flavour['functional']}###{single_flavour['basisset']}.xyz"
     task_dir_path = os.path.join(temp_task_dir,
-                                f"flavour{dft_flavours['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
+                                f"flavour{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
 
     os.mkdir(task_dir_path)
     print(f"Creating directory {task_dir_path}")
