@@ -62,12 +62,15 @@ def exportXYZ(coords, elements, filename, mask=[]):
     outfile.close()
 
 #Marlen's one
-def exportXYZs(coords,elements,filename):
-    outfile=open(filename,"w")
-    for idx in range(len(coords)):
-        outfile.write("%i\n\n"%(len(elements[idx])))
-        for atomidx,atom in enumerate(coords[idx]):
-            outfile.write("%s %f %f %f\n"%(elements[idx][atomidx].capitalize(),atom[0],atom[1],atom[2]))
+def exportXYZs(coords, elements, filename):
+    outfile = open(filename, "a")
+
+    for i in range(len(coords)):
+        outfile.write(f"{len(elements[i])}\n\n")
+
+        for atomidx, atom in enumerate(coords[i]):
+            outfile.write("%s %f %f %f\n"%(elements[i][atomidx].capitalize(), atom[0], atom[1], atom[2]))
+
     outfile.close()
 
 def exportXYZs_with_tasks(coords, elements, tasks, filename):
