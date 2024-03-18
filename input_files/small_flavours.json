@@ -1,4 +1,4 @@
 {
     "functionals": ["bmk"],
-    "basissets": ["6-311++G**"]
+    "basissets": ["6-311++G**", "def-SVP"]
     }

@@ -17,7 +17,7 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
     if not os.path.exists(path_to_finished_tasks):
         os.makedirs(path_to_finished_tasks)
 
-    base_settings = {"qm_method": "dft",  # "dft" or "dft"
+    base_settings = {"qm_method": "dft",
                      "delete_calculation_dirs": False,
                      "copy_mos": False,
                      "use_dispersions": True,
@@ -28,17 +28,22 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
                      }
 
     all_todo_task_dirs = find_all_task_dirs(path_to_temp_tasks)
+    print("All of the task dir to be calculated are:", all_todo_task_dirs)
+
     for task_dir in all_todo_task_dirs:
+        print("Task to be calculated directory ", task_dir)
         path_task_todo_dir = os.path.join(path_to_temp_tasks, task_dir)
         path_task_done_dir = os.path.join(path_to_finished_tasks, task_dir)
         energies = calculate_energies_for_task(path_to_task=path_task_todo_dir,
                                                settings=base_settings,
                                                number_of_workers=num_workers)
-
+        
         output_file_name = f"labels_01_energies.npy"
+        print("Saving the output files in path: ", path_task_todo_dir, '/', output_file_name)
         np.save(os.path.join(path_task_todo_dir, output_file_name), energies)
 
         # move task to done
+        print("Moving task to done, from ", path_task_todo_dir, " to ", path_task_done_dir)
         shutil.move(path_task_todo_dir, path_task_done_dir)
 
 

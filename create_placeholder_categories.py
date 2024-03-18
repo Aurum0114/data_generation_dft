@@ -29,22 +29,21 @@ def create_placeholder_categories(flavour_file, molecule_xyz_file, num_molecules
     basissets = func_and_basis["basissets"]
 
     dft_flavours = []
+    index = 1
     for f in functionals:
         for b in basissets:
             t = {
-                "number": None,
+                "number": str(index),
                 "set": None,  # train or test
                 "functional": f,
                 "basisset": b,
                 "num_molecules": num_molecules
             }
             dft_flavours.append(t)
-
-    # set number for all tasks/categories/flavours
-    for i, flavour in enumerate(dft_flavours):
-        flavour["number"] = str(i + 1)
+            index += 1
 
     num_flavours = len(dft_flavours)
+    print("Found number of flavours is: ", num_flavours)
 
     num_digits_needed = math.ceil(np.log10(num_flavours))
     for single_flavour in dft_flavours:

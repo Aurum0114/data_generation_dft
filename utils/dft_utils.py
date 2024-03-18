@@ -4,6 +4,7 @@ import numpy as np
 from io import StringIO
 import resource
 import subprocess
+import datetime
 import uuid
 
 import utils.xyz_utils as xyz
@@ -17,18 +18,8 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def create_tm_dir(moldir, overwrite=False):
-    if os.path.exists(moldir) and not overwrite:
-        print('TM directory already exists and overwrite false.')
-    else:
-        try:
-            os.makedirs(moldir)
-        except FileExistsError:
-            os.system('rm -r {}/'.format(moldir))
-            os.makedirs(moldir)
-
-
-def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], dirname = None, partial_chrg = False, unp_el = None, dispersion= False, h20=False):
+def dft_calc(dft_settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], dirname = None, partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
+    print("The dft settings in dft_calc are:", dft_settings)
 
     if opt and grad:
         exit("opt and grad are exclusive")
@@ -53,16 +44,18 @@ def dft_calc(dft_settings, coords, elements, opt=False, grad=False, hess=False, 
     startdir = os.getcwd() #stores current directory
     os.chdir(rundir) #goes to the rundir
     
-    # prep coords , control
+    print("Starting to prepare input")
     PrepTMInputNormal(".", coords, elements)
     
     #if unp_el != None and unp_el != 0:
     # run calculation
+    print("Starting to run TM calculation")
     RunTMCalculation(".", dft_settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
     #else:
     #    RunTMCalculation(".", dft_settings, disp = dispersion, pop = partial_chrg)
     
-    # read out results    
+    # read out results  
+    print("TM calculation converged, reading out the results")  
     if opt:
         os.system("t2x coord > opt.xyz")
         coords_new, elements_new = xtb.readXYZ("opt.xyz")
@@ -115,6 +108,7 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     if uhf == 3:
         instring = prep_define_file_uhf_3(dft_settings, charge)
     
+    print("Starting to execute define string")
     ExecuteDefineString(instring)
     
     # add functional to control file
@@ -137,7 +131,8 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
         else:
             print("WARNING: Did not find old mos file in %s/pre_optimization"%(dft_settings["main_directory"]))
     
-    # do calculation     
+    # do calculation  
+    print("Got to the terminal interaction part of TM!")   
     if dft_settings["turbomole_method"]=="ridft":
         os.system("ridft > TM.out")
         #os.system("rdgrad > rdgrad.out")    ###removed grad
@@ -166,7 +161,7 @@ def RunTMCalculation(moldir, dft_settings, charge, uhf = None, disp=False, pop =
     os.chdir(startdir)
     return(finished)
 
-#-------------------------------------------------------------preparation functions
+#------------------------------------------------------------------preparation functions
 
 def PrepTMInputNormal(moldir, coords, elements):
     coordfile = open("%s/coord"%(moldir), 'w')
@@ -207,9 +202,9 @@ def prep_define_file_uhf_1(dft_settings, charge):
     if dft_settings["turbomole_method"]=="ridft":
         outfile.write("ri\non\nm1500\n\n\n\n" )
 
-    outfile.write("scf\niter\n500\n\n\n") #1000
-    #outfile.write("scf\ndsp\non\n\n\n") ## statement nicht erkannt ? 
-    outfile.write("scf\nconv\n5\n\n\n") # 7?
+    outfile.write("scf\niter\n100\n\n\n") 
+    #outfile.write("scf\ndsp\non\n\n\n") 
+    outfile.write("scf\nconv\n5\n\n\n") 
     outfile.write("\n\n\n\n*\n")
 
     returnstring = outfile.getvalue()
@@ -328,8 +323,17 @@ def ExecuteDefineString(instring):
 def setulimit():
     resource.setrlimit(resource.RLIMIT_STACK,(-1,resource.RLIM_INFINITY))
 
+#----------------------------------------------------read out calculation results
+    
 def getTMEnergies(moldir):
-    eigerfile=open("%s/eiger.out"%(moldir),"r")
+
+    print("current directory at the start of getTMEnergies function is ", os.getcwd())
+    print("moldir is defined as: ", moldir)
+    try:
+        eigerfile=open("%s/eiger.out"%(moldir),"r")
+    except FileNotFoundError as err:
+        raise FileNotFoundError("the eiger.out file is not found, was searching in directory", moldir)
+
     eigerlines=eigerfile.readlines()
     eigerfile.close()
     total_energy=0.0
@@ -345,8 +349,6 @@ def getTMEnergies(moldir):
                 energy_lumo=eigerline.split()[8]
                 break
     return([float(energy_homo),float(energy_lumo),float(total_energy)])
-
-#----------------------------------------------------read out calculation results
 
 def read_dft_grad():
     if not os.path.exists("gradient"):
@@ -423,23 +425,6 @@ def read_dft_hess():
 
     return(hess, vibspectrum, reduced_masses)
 
-def getTMEnergies(moldir):
-    eigerfile=open("%s/eiger.out"%(moldir),"r")
-    eigerlines=eigerfile.readlines()
-    eigerfile.close()
-    total_energy=0.0
-    energy_homo=0.0
-    energy_lumo=0.0
-    for eigerline in eigerlines:
-        if len(eigerline.split())!=0:
-            if eigerline.split()[0]=="Total":
-                total_energy=eigerline.split()[6]
-            elif eigerline.split()[0]=="HOMO:":
-                energy_homo=eigerline.split()[8]
-            elif eigerline.split()[0]=="LUMO:":
-                energy_lumo=eigerline.split()[8]
-                break
-    return([float(energy_homo),float(energy_lumo),float(total_energy)])
 
 def getMullikans(outfilename="ridft.log", noOfAtoms=0):
     TMfile=open(outfilename,"r")
