@@ -74,6 +74,9 @@ def sample_molecules_for_flavour(single_flavour, coords_all, elements_all, temp_
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
         json.dump(single_flavour, fp)
 
+def sample_for_datatype():
+    pass
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
