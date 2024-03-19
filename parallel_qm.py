@@ -14,6 +14,14 @@ dft_settings = {"copy_mos": False,
                 "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
                 "turbomole_functional": "bmk"} #  BMK?? b3-lyp
 
+def create_flavour_setting(base_settings, flavour_def): 
+    task_settings = copy.deepcopy(base_settings)
+    task_settings["turbomole_functional"] = flavour_def["functional"]
+    task_settings["turbomole_basis"] = flavour_def["basisset"]
+
+    return task_settings
+
+
 def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     """
     Function that calculates energies for placeholder categories
@@ -108,19 +116,3 @@ def qm_task(identifier, data):
     
     return (results)
 
-
-def find_all_task_dirs(path_to_tasks): 
-    all_task_dirs = []
-    for x in os.listdir(path_to_tasks):
-        if os.path.isdir(os.path.join(path_to_tasks, x)) and x.startswith("T_"):
-            all_task_dirs.append(x)
-    all_task_dirs = sorted(all_task_dirs)
-    return all_task_dirs
-
-
-def create_flavour_setting(base_settings, flavour_def): 
-    task_settings = copy.deepcopy(base_settings)
-    task_settings["turbomole_functional"] = flavour_def["functional"]
-    task_settings["turbomole_basis"] = flavour_def["basisset"]
-
-    return task_settings
