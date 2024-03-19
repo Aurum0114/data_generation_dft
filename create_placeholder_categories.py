@@ -10,7 +10,7 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, output_temp_dir, 
     """
     This function creates placeholder categories that will be used by the next function to create the actual categories.
     :flavour_file: Stores two lists: all functionals and basis sets. Example file: example_files/func_and_base.json
-    :xyz_files_dir: Filtered dataset to sample molecules from. Example file: example_files/inputs.xyz
+    :xyz_files_dir: Filtered dataset to sample molecules from, contained the data in folders
     :output_temp_dir: The directory that stores the temporary placeholder categories
     :num_molecules: The number of molecules per datatype per category
     """
