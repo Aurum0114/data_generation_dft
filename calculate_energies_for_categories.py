@@ -2,7 +2,7 @@ import argparse
 import os
 import shutil
 import numpy as np
-from parallel_qm import find_all_task_dirs, calculate_energies_for_task
+from parallel_qm import calculate_energies_for_task
 
 
 def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
@@ -45,6 +45,15 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
         # move task to done
         print("Moving task to done, from ", path_task_todo_dir, " to ", path_task_done_dir)
         shutil.move(path_task_todo_dir, path_task_done_dir)
+
+
+def find_all_task_dirs(path_to_tasks): 
+    all_task_dirs = []
+    for x in os.listdir(path_to_tasks):
+        if os.path.isdir(os.path.join(path_to_tasks, x)) and x.startswith("FLV_"):
+            all_task_dirs.append(x)
+    all_task_dirs = sorted(all_task_dirs)
+    return all_task_dirs
 
 
 if __name__ == "__main__":
