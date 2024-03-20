@@ -71,9 +71,6 @@ def exportXYZs(coords, elements, charges, filename):
         outfile.write(f"{len(elements[i])} {charges[i]}\n\n")
 
         for atomidx, atom in enumerate(coords[i]):
-            print(f"total coords list for i molecule is is {coords[i]}")
-            print(f"list of elements for i is {elements[i]}")
-            print(f'finally, the atomidx element of that list is {elements[i][atomidx]}')
             outfile.write(f"{elements[i][atomidx].capitalize()} {atom[0]} {atom[1]} {atom[2]}\n")
 
     outfile.close()
