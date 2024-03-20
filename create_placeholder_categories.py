@@ -103,6 +103,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         os.chdir(working_dir)
 
     assert len(coords_all) == len(elements_all) == len(charges_all)
+    print(f"in total {len(coords_all)} molecules were collected")
     print(f"Data was collected for {len(coords_all)/datapoints_to_sample} data types")
 
     task_coord_filename = f"data_01_{single_flavour['functional']}###{single_flavour['basisset']}.xyz"
