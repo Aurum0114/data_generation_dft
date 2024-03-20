@@ -124,7 +124,7 @@ def find_mol_charge(i, ids, system_names):
     pos_chr = system.count('+')
     neg_chr = system.count('-')
     tot_chr = pos_chr - neg_chr   
-    print(f"For system {system}, ID {ids[i]}, the charge is {tot_chr}")
+    print(f"For system {system}, ID {ids[i]} = {i}, the charge is {tot_chr}")
 
     return tot_chr
 
