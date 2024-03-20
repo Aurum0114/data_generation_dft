@@ -20,7 +20,8 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, output_temp_dir, 
     #    shutil.rmtree(output_temp_dir)
 
     temp_task_dir = os.path.join(output_temp_dir, "tasks")
-    os.makedirs(temp_task_dir)
+    if not os.path.exists(temp_task_dir):
+        os.makedirs(temp_task_dir)
 
     with open(flavour_file, 'r') as f:
         func_and_basis = json.load(f)
