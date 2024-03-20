@@ -8,7 +8,7 @@ import re
 
 import utils.xyz_utils as xyz
 
-def create_placeholder_categories(flavour_file, xyz_files_dir, output_temp_dir, num_molecules, flavour_idx=None):
+def create_placeholder_categories(flavour_file, xyz_files_dir, temp_task_dir, num_molecules, flavour_idx=None):
     """
     This function creates placeholder categories that will be used by the next function to create the actual categories.
     :flavour_file: Stores two lists: all functionals and basis sets. Example file: example_files/func_and_base.json
@@ -19,7 +19,6 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, output_temp_dir, 
     #if os.path.exists(output_temp_dir):
     #    shutil.rmtree(output_temp_dir)
 
-    temp_task_dir = os.path.join(output_temp_dir, "tasks")
     if not os.path.exists(temp_task_dir):
         os.makedirs(temp_task_dir)
 
