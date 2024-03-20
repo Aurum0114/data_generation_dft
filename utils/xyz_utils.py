@@ -37,7 +37,9 @@ def readXYZs(filename):
     coords=[[]]
     elements=[[]]
     for line in infile.readlines():
-        if len(line.split())==1 and len(coords[-1])!=0:
+        words = line.split()
+
+        if len(words)==1 and str(words[0]).isnumeric() and len(coords[-1])!=0:
             coords.append([])
             elements.append([])
         elif len(line.split())==4:
@@ -62,24 +64,15 @@ def exportXYZ(coords, elements, filename, mask=[]):
     outfile.close()
 
 #Marlen's one
-def exportXYZs(coords, elements, filename):
+def exportXYZs(coords, elements, charges, filename):
     outfile = open(filename, "a")
-
+    
     for i in range(len(coords)):
-        outfile.write(f"{len(elements[i])}\n\n")
+        outfile.write(f"{len(elements[i])} {charges[i]}\n\n")
 
         for atomidx, atom in enumerate(coords[i]):
-            outfile.write("%s %f %f %f\n"%(elements[i][atomidx].capitalize(), atom[0], atom[1], atom[2]))
+            outfile.write(f"{elements[i][atomidx].capitalize()} {atom[0]} {atom[1]} {atom[2]}\n")
 
-    outfile.close()
-
-def exportXYZs_with_tasks(coords, elements, tasks, filename):
-    outfile=open(filename,"w")
-    for idx in range(len(coords)):
-        outfile.write("%i\n"%(len(elements[idx])))
-        outfile.write("%s\n"%(tasks[idx]))
-        for atomidx,atom in enumerate(coords[idx]):
-            outfile.write("%s %f %f %f\n"%(elements[idx][atomidx].capitalize(),atom[0],atom[1],atom[2]))
     outfile.close()
 
 #filename = name of XYZ output file
