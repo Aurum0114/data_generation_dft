@@ -89,7 +89,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         ids = info_df['ID'].tolist()
         system_names = info_df['names'].tolist()
         
-        num_all_mol = len(coords_all)
+        num_all_mol = len(coords_all_1type)
         sampled_indices = random.sample(range(num_all_mol), datapoints_to_sample)
 
         coords_sampled = [coords_all_1type[i] for i in sampled_indices]
