@@ -38,6 +38,10 @@ def calculate_energies_for_categories(temp_dir, output_dir, num_workers):
                                                settings=base_settings,
                                                number_of_workers=num_workers)
         
+        #find all labels_01_energies files
+        #read in its contents
+        #append energies to the read numpy array
+        #save it again
         output_file_name = f"labels_01_energies.npy"
         print("Saving the output files in path: ", path_task_todo_dir, '/', output_file_name)
         np.save(os.path.join(path_task_todo_dir, output_file_name), energies)
