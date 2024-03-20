@@ -79,11 +79,12 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         pattern_coords = re.compile(file_pattern_coords)
         pattern_info = re.compile(file_pattern_info)
 
-        coords_file = [file for file in all_files if pattern_coords.match(file)]
+        coords_file = [file for file in all_files if pattern_coords.match(file)][0]
+        print(f"Coords file for data type {datatype_path} is {coords_file}")
         coords_all_1type, elements_all_1type = xyz.readXYZs(coords_file)
         assert len(coords_all) == len(elements_all)
         
-        info_file_path = [file for file in all_files if pattern_info.match(file)]
+        info_file_path = [file for file in all_files if pattern_info.match(file)][0]
         info_df = pd.read_csv(info_file_path, usecols=['ID', 'names'])
         ids = info_df['ID'].tolist()
         system_names = info_df['names'].tolist()
