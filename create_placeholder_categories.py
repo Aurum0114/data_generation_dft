@@ -99,6 +99,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         coords_all.append(coords_sampled)
         elements_all.append(elements_sampled)
         charges_all.append(charges_sampled)
+
         os.chdir(working_dir)
 
     assert len(coords_all) == len(elements_all) == len(charges_all)
@@ -111,7 +112,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
     if not os.path.exists(task_dir_path):
         os.mkdir(task_dir_path)
         print(f"Creating directory {task_dir_path}")
-        
+
     xyz.exportXYZs(coords_all, elements_all, charges_all, os.path.join(task_dir_path, task_coord_filename))
 
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
@@ -123,7 +124,7 @@ def find_mol_charge(i, ids, system_names):
     pos_chr = system.count('+')
     neg_chr = system.count('-')
     tot_chr = pos_chr - neg_chr   
-    print(f"For system {system}, ID {ids}, the charge is {tot_chr}")
+    print(f"For system {system}, ID {ids[i]}, the charge is {tot_chr}")
 
     return tot_chr
 
