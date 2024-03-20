@@ -108,8 +108,10 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
     task_dir_path = os.path.join(temp_task_dir,
                                 f"FLV_{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
 
-    os.mkdir(task_dir_path)
-    print(f"Creating directory {task_dir_path}")
+    if not os.path.exists(task_dir_path):
+        os.mkdir(task_dir_path)
+        print(f"Creating directory {task_dir_path}")
+        
     xyz.exportXYZs(coords_all, elements_all, charges_all, os.path.join(task_dir_path, task_coord_filename))
 
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
