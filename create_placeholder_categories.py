@@ -96,9 +96,9 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         elements_sampled = [elements_all_1type[i] for i in sampled_indices]
         charges_sampled = [find_mol_charge(i, ids, system_names) for i in sampled_indices]
 
-        coords_all.append(coords_sampled)
-        elements_all.append(elements_sampled)
-        charges_all.append(charges_sampled)
+        coords_all.extend(coords_sampled)
+        elements_all.extend(elements_sampled)
+        charges_all.extend(charges_sampled)
 
         os.chdir(working_dir)
 
@@ -118,6 +118,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
 
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
         json.dump(single_flavour, fp)
+        print("hell yeah it worked")
         
 
 def find_mol_charge(i, ids, system_names):
