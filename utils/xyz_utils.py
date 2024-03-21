@@ -48,6 +48,28 @@ def readXYZs(filename):
     infile.close()
     return coords,elements
 
+
+def readXYZs_with_charges(filename):
+    infile=open(filename,"r")
+    coords=[]
+    elements=[]
+    charges = []
+
+    for line in infile.readlines():
+        words = line.split()
+        
+        if len(words)==2 and str(words[0]).isnumeric():
+            coords.append([])
+            elements.append([])
+            charges.append(words[1])
+
+        elif len(words)==4:
+            elements[-1].append(words[0].capitalize())
+            coords[-1].append([float(line.split()[1]), float(line.split()[2]), float(line.split()[3])])
+
+    infile.close()
+    return coords, elements, charges
+
 #Adrian's one
 def exportXYZ(coords, elements, filename, mask=[]):
     outfile=open(filename, "w")
@@ -64,7 +86,7 @@ def exportXYZ(coords, elements, filename, mask=[]):
     outfile.close()
 
 #Marlen's one
-def exportXYZs(coords, elements, charges, filename):
+def exportXYZs_with_charges(coords, elements, charges, filename):
     outfile = open(filename, "a")
     
     for i in range(len(coords)):
