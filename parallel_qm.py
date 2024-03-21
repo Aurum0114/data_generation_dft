@@ -8,11 +8,11 @@ import utils.dft_utils as dft
 import utils.xtb_utils as xtb
 import utils.xyz_utils as xyz
 
-dft_settings = {"copy_mos": False,
-                "use_dispersions": True,
-                "turbomole_method": "ridft",
-                "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
-                "turbomole_functional": "bmk"} #  BMK?? b3-lyp
+#dft_settings = {"copy_mos": False,
+#                "use_dispersions": True,
+#                "turbomole_method": "ridft",
+#                "turbomole_basis": "6-311++G**", #  def2-SV(P)  6-311++G**
+#                "turbomole_functional": "bmk"} #  BMK?? b3-lyp
 
 def create_flavour_setting(base_settings, flavour_def): 
     task_settings = copy.deepcopy(base_settings)
@@ -22,7 +22,7 @@ def create_flavour_setting(base_settings, flavour_def):
     return task_settings
 
 
-def calculate_energies_for_task(path_to_task, settings, number_of_workers):
+def calculate_energies_for_task(path_to_task, base_settings, number_of_workers):
     """
     Function that calculates energies for placeholder categories
     :param path_to_task: path to placeholder category
@@ -43,17 +43,17 @@ def calculate_energies_for_task(path_to_task, settings, number_of_workers):
     if len(xyz_files) != 1:
         raise NotImplementedError
 
-    xyz_file = xyz_files[0]
+    xyz_file_path = os.path.join(path_to_task, xyz_files[0])
 
-    coords_all, elements_all = xyz.readXYZs(os.path.join(path_to_task, xyz_file))
-    assert len(coords_all) == len(elements_all)
+    coords_all, elements_all, charges_all = xyz.readXYZs_with_charges(xyz_file_path)
+    assert len(coords_all) == len(elements_all) == len(charges_all)
     num_calcs = len(coords_all)
     print("The number of calculations to be performed is:", num_calcs)
 
-    task_settings = create_flavour_setting(base_settings=settings, flavour_def=flavour_def)
+    task_settings = create_flavour_setting(base_settings=base_settings, flavour_def=flavour_def)
     print("Task settings are equal to:", task_settings)
 
-    items = [(i, [coords_all[i], elements_all[i], task_settings]) for i in range(num_calcs)]
+    items = [(i, [coords_all[i], elements_all[i], charges_all[i], task_settings]) for i in range(num_calcs)]
     print("Provided items are: ", items)
 
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
@@ -102,13 +102,18 @@ def qm_task(identifier, data):
     print("Provided coordinates for task number", identifier, " are:", coords)
     elements = data[1]
     print("Provided elements for task number", identifier, " are:", elements)
-    settings = data[2]
+    charge = data[2]
+    print(f"Provided charge for task {identifier} is {charge}")
+    settings = data[3]
     print("Provided settings for task number", identifier, " are:", settings)
+    
     
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
-        results = dft.dft_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
+        #add identifier value for temp dir??
+        #results = dft.dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
+        results = dft.dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[])
     else:
         results = {}
     
