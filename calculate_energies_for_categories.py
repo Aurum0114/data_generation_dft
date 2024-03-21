@@ -105,7 +105,7 @@ def update_task_info(source_dir, destionation_dir):
     for src_file in os.listdir(source_dir):
         if src_file.endswith("info.json"):
             info_to_append_path = os.path.join(source_dir, src_file)
-    if info_to_append is None:
+    if info_to_append_path is None:
         print(f"No info file was found in {source_dir}")
         
     with open(info_to_append_path, 'r') as src_file:
