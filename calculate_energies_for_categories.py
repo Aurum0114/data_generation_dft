@@ -68,6 +68,8 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
             print(f"File {results_file_name} has not been found. Creating a new one...")
             np.save(results_file_path_in_flavours_dir, energies)
             shutil.move(flavour_todo_path, flavour_done_path)
+    
+    print(f"All calculations finished!")
 
 def update_molecules_and_task_info(source_dir, destionation_dir):
 
