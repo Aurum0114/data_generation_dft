@@ -54,7 +54,7 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, temp_task_dir, nu
             export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
 
     elif str(flavour_idx).isnumeric() and 1 <= int(flavour_idx) <= len(dft_flavours):
-        single_flavour = dft_flavours[flavour_idx-1]
+        single_flavour = dft_flavours[int(flavour_idx)-1]
         export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         
     else:
