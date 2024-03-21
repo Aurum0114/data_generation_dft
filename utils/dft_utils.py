@@ -18,7 +18,7 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], dirname = None, partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
+def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
     print(f"settings passed are {settings}")
     print(f"all of the variables are: charge: {charge}, unp_ele: {unp_el}, h20: {h20}")
 
@@ -31,21 +31,22 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
         if len(freeze)!=0:
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
-    if dirname is None:
-        current_datetime = datetime.datetime.now().strftime("%m/%d_%H:%M:%S")
-        rundir=f"dft_tmpdir_{settings['turbomole_functional']}_{settings['turbomole_basis']}_{uuid.uuid4().hex}_{current_datetime}"
-    else:
-        rundir = dirname
-    
-    #maybe make it in a new folder?
-    if not os.path.exists(rundir):
-        os.makedirs(rundir)
-    else:
-        if len(os.listdir(rundir))>0:
-            os.system("rm %s/*"%(rundir)) #removes all files in rundir
+    temp_flavour_folder = f"dft_tmpdirs_{settings['turbomole_functional']}_{settings['turbomole_basis']}"
+    temp_flavour_folder_path = os.path.join(os.getcwd(), temp_flavour_folder)
+    if not os.path.exists(temp_flavour_folder):
+        os.makredirs(temp_flavour_folder_path)
+    os.chdir(temp_flavour_folder_path)
 
-    startdir = os.getcwd() #stores current directory
-    os.chdir(rundir) #goes to the rundir
+    current_datetime = datetime.datetime.now().strftime("%d:%m_%H:%M:%S")
+    rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
+    
+    while os.path.exists(rundir):
+        print(f"chosen dft_tmpdir already exists. creating a new one...")
+        rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
+
+    os.makedirs(rundir)
+    startdir = os.getcwd() 
+    os.chdir(rundir) 
     
     print("Starting to prepare input")
     PrepTMInputNormal(".", coords, elements)
