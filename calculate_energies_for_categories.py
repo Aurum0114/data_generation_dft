@@ -25,7 +25,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
                      "turbomole_functional": "bmk",
                      "partial_chrg": False,
                      "unp_el": 1,
-                     "h20": False,
+                     "h20": True,
                      }
     
     all_flavours_todo_paths = find_all_task_dirs(flavours_dir)
