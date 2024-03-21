@@ -32,7 +32,7 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
     if dirname is None:
-        current_datetime = datetime.datetime.now().strftime("%m%d%H%M%S")
+        current_datetime = datetime.datetime.now().strftime("%m/%d_%H:%M:%S")
         rundir=f"dft_tmpdir_{settings['turbomole_functional']}_{settings['turbomole_basis']}_{uuid.uuid4().hex}_{current_datetime}"
     else:
         rundir = dirname
