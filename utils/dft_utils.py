@@ -19,7 +19,8 @@ AToBohr = 1.889725989
 HToeV = 27.211399
 
 def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], dirname = None, partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
-    print("The dft settings in dft_calc are:", settings)
+    print(f"settings passed are {settings}")
+    print(f"all of the variables are: charge: {charge}, unp_ele: {unp_el}, h20: {h20}")
 
     if opt and grad:
         exit("opt and grad are exclusive")
@@ -31,11 +32,12 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
     if dirname is None:
-        #might add an ordinal number passed somewhere
-        rundir=f"dft_tmpdir_{settings['turbomole_functional']}_{settings['turbomole_basis']}_{uuid.uuid4().hex}_"
+        current_datetime = datetime.datetime.now().strftime("%m%d%H%M%S")
+        rundir=f"dft_tmpdir_{settings['turbomole_functional']}_{settings['turbomole_basis']}_{uuid.uuid4().hex}_{current_datetime}"
     else:
         rundir = dirname
     
+    #maybe make it in a new folder?
     if not os.path.exists(rundir):
         os.makedirs(rundir)
     else:
@@ -48,12 +50,9 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
     print("Starting to prepare input")
     PrepTMInputNormal(".", coords, elements)
     
-    #if unp_el != None and unp_el != 0:
     # run calculation
     print("Starting to run TM calculation")
     RunTMCalculation(".", settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
-    #else:
-    #    RunTMCalculation(".", dft_settings, disp = dispersion, pop = partial_chrg)
     
     # read out results  
     print("TM calculation converged, reading out the results")  
@@ -87,7 +86,6 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
     misc.check_basis_and_func(path_to_control=path_to_control, basis_todo=settings["turbomole_basis"],
                          func_todo=settings["turbomole_functional"])
 
-    #os.system("rm -r %s"%(rundir))
 
     if settings["delete_calculation_dirs"]:
         os.system("rm -r %s" % (rundir))
