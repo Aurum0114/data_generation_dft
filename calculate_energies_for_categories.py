@@ -71,11 +71,12 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
     
     print(f"All calculations finished!")
 
-def update_molecules_and_task_info(source_dir, destionation_dir):
+def update_molecules_and_task_info(source_dir, destination_dir):
 
-    existing_molecules_path = find_file_path(destionation_dir, '.xyz')
+    existing_molecules_path = find_file_path(destination_dir, '.xyz')
+    print(f"existing molecules path is {existing_molecules_path}")
     molecules_to_append_path = find_file_path(source_dir, '.xyz')
-    existing_info_path = find_file_path(destionation_dir, 'info.json')
+    existing_info_path = find_file_path(destination_dir, 'info.json')
     info_to_append_path = find_file_path(source_dir, 'info.json')
 
     with open(molecules_to_append_path, 'r') as src_file:
@@ -107,6 +108,7 @@ def find_file_path(path_to_search, norm_expression):
     for file in os.listdir(path_to_search):
         if file.endswith(norm_expression):
             target_file_path = os.path.join(path_to_search, file)
+            print(f"file {target_file_path} was found in {path_to_search}")
             break
     if target_file_path is None:
         print(f"No files with normal expression {norm_expression} were found in {path_to_search}")
