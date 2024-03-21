@@ -113,7 +113,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
         os.mkdir(task_dir_path)
         print(f"Creating directory {task_dir_path}")
 
-    xyz.exportXYZs(coords_all, elements_all, charges_all, os.path.join(task_dir_path, task_coord_filename))
+    xyz.exportXYZs_with_charges(coords_all, elements_all, charges_all, os.path.join(task_dir_path, task_coord_filename))
 
     with open(os.path.join(task_dir_path, "task_info.json"), 'w') as fp:
         json.dump(single_flavour, fp)
