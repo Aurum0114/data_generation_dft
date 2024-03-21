@@ -48,13 +48,13 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
 
         if os.path.exists(results_file_path):
             print(f"File {results_file_name} has been found in {flavour_done_path}, appending the results there...")
+
+            update_molecules_and_task_info(flavour_todo_path, flavour_done_path)
+
             existing_energies = np.load(results_file_path)
             energies = np.array(energies)
             energies = np.concatenate((existing_energies, energies))
             np.save(results_file_path, energies)
-
-            append_molecules(flavour_todo_path, flavour_done_path)
-            update_task_info(flavour_todo_path, flavour_done_path)
             
             for item in os.listdir(flavour_todo_path):
                 print(f"moving {item} to done path")
@@ -69,61 +69,46 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
             np.save(results_file_path_in_flavours_dir, energies)
             shutil.move(flavour_todo_path, flavour_done_path)
 
-def append_molecules(source_dir, destionation_dir):
+def update_molecules_and_task_info(source_dir, destionation_dir):
 
-    existing_molecules_path = None
-    for dest_file in os.listdir(destionation_dir):
-        if dest_file.endswith(".xyz"):
-            existing_molecules_path = os.path.join(destionation_dir, dest_file)
-    if existing_molecules_path is None:
-        print(f"No molecules file was found in {destionation_dir}")
-        
-    molecules_to_append_path = None
-    for src_file in os.listdir(source_dir):
-        if src_file.endswith(".xyz"):
-            molecules_to_append_path = os.path.join(source_dir, src_file)
-    if molecules_to_append_path is None:
-        print(f"No molecules file was found in {source_dir}")
+    existing_molecules_path = find_file_path(destionation_dir, '.xyz')
+    molecules_to_append_path = find_file_path(source_dir, '.xyz')
+    existing_info_path = find_file_path(destionation_dir, 'info.json')
+    info_to_append_path = find_file_path(source_dir, 'info.json')
 
     with open(molecules_to_append_path, 'r') as src_file:
         molecules_to_append = src_file.read()
     with open(existing_molecules_path, 'a') as dest_file:
         dest_file.write(molecules_to_append)
-    
-    os.remove(existing_molecules_path)
 
-def update_task_info(source_dir, destionation_dir):
-
-    existing_info_path = None
-    for dest_file in os.listdir(destionation_dir):
-        if dest_file.endswith("info.json"):
-            existing_info_path = os.path.join(destionation_dir, dest_file)
-    if existing_info_path is None:
-        print(f"No info file was found in {destionation_dir}")
-
-    info_to_append_path = None
-    for src_file in os.listdir(source_dir):
-        if src_file.endswith("info.json"):
-            info_to_append_path = os.path.join(source_dir, src_file)
-    if info_to_append_path is None:
-        print(f"No info file was found in {source_dir}")
-        
     with open(info_to_append_path, 'r') as src_file:
         info_to_append = json.load(src_file)
         functional = info_to_append['functional']
         basisset = info_to_append['basisset']
         num_mol_to_append = info_to_append['num_molecules']
-
+    
     with open(existing_info_path, 'r') as dest_file:
         info_to_update = json.load(dest_file)
         assert info_to_update['functional'] == functional, f"Functionals mismatch: source has {function}, whereas desination has {info_to_update['functional']}"
         assert info_to_update['basisset'] == basisset, f"Basis sets mismatch: source has {basisset}, whereas desination has {info_to_update['basisset']}"
         info_to_update['num_molecules'] = info_to_update['num_molecules'] + num_mol_to_append
-    
+
     with open(os.path.join(existing_info_path), 'w') as new_dest_file:
         json.dump(info_to_update, new_dest_file)
-
+    
+    os.remove(existing_molecules_path)
     os.remove(info_to_append_path)
+
+
+def find_file_path(path_to_search, norm_expression):
+    target_file_path = None
+    for file in os.listdir(path_to_search):
+        if file.endswith(norm_expression):
+            target_file_path = os.path.join(path_to_search, file)
+            break
+    if target_file_path is None:
+        print(f"No files with normal expression {norm_expression} were found in {path_to_search}")
+    return target_file_path
 
 
 def find_all_task_dirs(path_to_tasks): 
