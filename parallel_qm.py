@@ -56,8 +56,15 @@ def calculate_energies_for_task(path_to_task, base_settings, number_of_workers):
     items = [(i, [coords_all[i], elements_all[i], charges_all[i], task_settings]) for i in range(num_calcs)]
     print("Provided items are: ", items)
 
+    temp_flavour_folder = f"dft_tmpdirs_{task_settings['turbomole_functional']}_{task_settings['turbomole_basis']}"
+    temp_flavour_folder_path = os.path.join(os.getcwd(), temp_flavour_folder)
+    if not os.path.exists(temp_flavour_folder_path):
+        os.makedirs(temp_flavour_folder_path)
+        
+    startdir = os.getcwd()
+    os.chdir(temp_flavour_folder_path)
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
-
+    os.chdir(startdir)
     return energies
 
 

@@ -31,12 +31,6 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
         if len(freeze)!=0:
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
-    temp_flavour_folder = f"dft_tmpdirs_{settings['turbomole_functional']}_{settings['turbomole_basis']}"
-    temp_flavour_folder_path = os.path.join(os.getcwd(), temp_flavour_folder)
-    if not os.path.exists(temp_flavour_folder_path):
-        os.makedirs(temp_flavour_folder_path)
-    os.chdir(temp_flavour_folder_path)
-
     current_datetime = datetime.datetime.now().strftime("%d.%m_%H:%M:%S")
     rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
     
