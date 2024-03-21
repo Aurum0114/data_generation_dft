@@ -71,18 +71,20 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
 
 def append_molecules(source_dir, destionation_dir):
 
+    existing_molecules_path = None
     for dest_file in os.listdir(destionation_dir):
         if dest_file.endswith(".xyz"):
             existing_molecules_path = os.path.join(destionation_dir, dest_file)
-        else:
-            print(f"No molecules file was found in {destionation_dir}")
-
+    if existing_molecules_path is None:
+        print(f"No molecules file was found in {destionation_dir}")
+        
+    molecules_to_append_path = None
     for src_file in os.listdir(source_dir):
         if src_file.endswith(".xyz"):
             molecules_to_append_path = os.path.join(source_dir, src_file)
-        else:
-            print(f"No molecules file was found in {source_dir}")
-        
+    if molecules_to_append_path is None:
+        print(f"No molecules file was found in {source_dir}")
+
     with open(molecules_to_append_path, 'r') as src_file:
         molecules_to_append = src_file.read()
     with open(existing_molecules_path, 'a') as dest_file:
@@ -92,17 +94,19 @@ def append_molecules(source_dir, destionation_dir):
 
 def update_task_info(source_dir, destionation_dir):
 
+    existing_info_path = None
     for dest_file in os.listdir(destionation_dir):
         if dest_file.endswith("info.json"):
             existing_info_path = os.path.join(destionation_dir, dest_file)
-        else:
-            print(f"No info file was found in {destionation_dir}")
-    
+    if existing_info_path is None:
+        print(f"No info file was found in {destionation_dir}")
+
+    info_to_append_path = None
     for src_file in os.listdir(source_dir):
         if src_file.endswith("info.json"):
             info_to_append_path = os.path.join(source_dir, src_file)
-        else:
-            print(f"No info file was found in {source_dir}")
+    if info_to_append is None:
+        print(f"No info file was found in {source_dir}")
         
     with open(info_to_append_path, 'r') as src_file:
         info_to_append = json.load(src_file)
@@ -114,7 +118,6 @@ def update_task_info(source_dir, destionation_dir):
         info_to_update = json.load(dest_file)
         assert info_to_update['functional'] == functional, f"Functionals mismatch: source has {function}, whereas desination has {info_to_update['functional']}"
         assert info_to_update['basisset'] == basisset, f"Basis sets mismatch: source has {basisset}, whereas desination has {info_to_update['basisset']}"
-
         info_to_update['num_molecules'] = info_to_update['num_molecules'] + num_mol_to_append
     
     with open(os.path.join(existing_info_path), 'w') as new_dest_file:
