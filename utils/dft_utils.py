@@ -37,7 +37,7 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
         os.makedirs(temp_flavour_folder_path)
     os.chdir(temp_flavour_folder_path)
 
-    current_datetime = datetime.datetime.now().strftime("%d:%m_%H:%M:%S")
+    current_datetime = datetime.datetime.now().strftime("%d.%m_%H:%M:%S")
     rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
     
     while os.path.exists(rundir):
