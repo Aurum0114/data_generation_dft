@@ -16,8 +16,6 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, temp_task_dir, nu
     :output_temp_dir: The directory that stores the temporary placeholder categories
     :num_molecules: The number of molecules per datatype per category
     """
-    #if os.path.exists(output_temp_dir):
-    #    shutil.rmtree(output_temp_dir)
 
     if not os.path.exists(temp_task_dir):
         os.makedirs(temp_task_dir)
@@ -107,7 +105,7 @@ def export_molecules_for_flavour(single_flavour, datatypes_paths, temp_task_dir)
 
     task_coord_filename = f"data_01_{single_flavour['functional']}###{single_flavour['basisset']}.xyz"
     task_dir_path = os.path.join(temp_task_dir,
-                                f"FLV_{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
+                                f"flv{single_flavour['number']}_{single_flavour['functional']}###{single_flavour['basisset']}")
 
     if not os.path.exists(task_dir_path):
         os.mkdir(task_dir_path)

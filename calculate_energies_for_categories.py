@@ -117,7 +117,7 @@ def find_file_path(path_to_search, norm_expression):
 def find_all_task_dirs(path_to_tasks): 
     all_task_dirs = []
     for x in os.listdir(path_to_tasks):
-        if os.path.isdir(os.path.join(path_to_tasks, x)) and x.startswith("FLV_"):
+        if os.path.isdir(os.path.join(path_to_tasks, x)) and x.startswith("flv"):
             all_task_dirs.append(x)
     all_task_dirs = sorted(all_task_dirs)
     return all_task_dirs
