@@ -18,7 +18,7 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg = False, unp_el = 1, dispersion= False, h20=False):
+def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=False, h20=False):
     print(f"settings passed are {settings}")
     print(f"all of the variables are: charge: {charge}, unp_ele: {unp_el}, h20: {h20}")
 
