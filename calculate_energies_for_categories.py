@@ -17,12 +17,11 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
         os.makedirs(results_dir)
 
     base_settings = {"qm_method": "dft",
-                     "delete_calculation_dirs": False,
-                     "copy_mos": False,
-                     "dispersion": True,
                      "turbomole_method": "ridft",
                      "turbomole_basis": "6-311++G**",
                      "turbomole_functional": "bmk",
+                     "delete_calculation_dirs": False,
+                     "copy_mos": False,
                      "partial_chrg": False,
                      "unp_el": 1,
                      "h20": True,
