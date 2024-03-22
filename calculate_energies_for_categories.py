@@ -31,7 +31,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
     print("All of the task dir to be calculated are:", all_flavours_todo_paths)
 
     for flavour_todo in all_flavours_todo_paths:
-        fl_num = flavour_todo[4:5]
+        fl_num = flavour_todo[3:4]
         print("Flavour to be calculated directory ", flavour_todo)
         flavour_todo_path = os.path.join(flavours_dir, flavour_todo)
         flavour_done_path = os.path.join(results_dir, flavour_todo)
