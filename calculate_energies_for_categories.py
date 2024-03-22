@@ -99,7 +99,7 @@ def update_molecules_and_task_info(source_dir, destination_dir):
     with open(os.path.join(existing_info_path), 'w') as new_dest_file:
         json.dump(info_to_update, new_dest_file)
     
-    os.remove(molecules_to_append)
+    os.remove(molecules_to_append_path)
     os.remove(info_to_append_path)
 
 
