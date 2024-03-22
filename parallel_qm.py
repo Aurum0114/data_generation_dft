@@ -118,7 +118,7 @@ def qm_task(identifier, data):
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
-        results = dft.dft_calc(settings, coords, elements, charge, h20=True)
+        results = dft.dft_calc(settings, coords, elements, charge, partial_chrg=settings['partial_chrg'], unp_el=settings['unp_el'], h20=settings['h20'])
     else:
         results = {}
     
