@@ -60,7 +60,7 @@ def calculate_energies_for_task(path_to_task, base_settings, number_of_workers):
     temp_flavour_folder_path = os.path.join(os.getcwd(), temp_flavour_folder)
     if not os.path.exists(temp_flavour_folder_path):
         os.makedirs(temp_flavour_folder_path)
-        
+
     startdir = os.getcwd()
     os.chdir(temp_flavour_folder_path)
     energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
@@ -118,9 +118,7 @@ def qm_task(identifier, data):
     if settings["qm_method"] == "xtb":
         results = xtb.xtb_calc(settings, coords, elements, opt=False, grad=False, hess=False, charge=0, freeze=[])
     elif settings["qm_method"] == "dft":
-        #add identifier value for temp dir??
-        #results = dft.dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=dft_settings['use_dispersions'], h20=False)
-        results = dft.dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[])
+        results = dft.dft_calc(settings, coords, elements, charge, h20=True)
     else:
         results = {}
     
