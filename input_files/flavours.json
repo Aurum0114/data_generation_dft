@@ -1,4 +1,4 @@
 {
-    "functionals": ["b-p", "pbe", "b3-lyp", "bh-lyp", "pbe0", "tpss", "tpssh", "m06", "m06-l", "m06-2x", "b97-d", "b97-3c"],
-    "basissets": ["def-SVP", "def2-SV(P)", "def2-TZVP", "def2-TZVPP", "cc-pVDZ", "aug-cc-pVDZ", "cc-pVTZ", "aug-cc-pVTZ", "6-31G", "6-311G"]
-    }
+    "functionals": ["b-p", "bmk", "tpss", "b3-lyp", "bh-lyp", "pbe0", "tpss", "tpssh", "m06-l", "m06-2x", "b97-d", "b97-3c"],
+    "basissets": ["def-SVP", "def2-SV(P)", "def2-TZVP", "def2-TZVPP", "cc-pVDZ", "aug-cc-pVDZ", "cc-pVTZ", "6-31G", "6-311G", "6-311++G**"]
+}
