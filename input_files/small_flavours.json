@@ -1,4 +1,4 @@
 {
     "functionals": ["bmk"],
-    "basissets": ["6-31+G(2df,p)"]
+    "basissets": ["6-311++G**"]
     }
