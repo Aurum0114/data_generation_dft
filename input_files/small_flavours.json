@@ -1,4 +1,4 @@
 {
     "functionals": ["bmk"],
-    "basissets": ["def-SVP", "def2-SV(P)"]
+    "basissets": ["6-31+G(2df,p)"]
     }
