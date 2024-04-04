@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 import random
-import shutil
 import re
 
 import utils.xyz_utils as xyz
@@ -25,19 +24,21 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, temp_task_dir, nu
 
     functionals = func_and_basis["functionals"]
     basissets = func_and_basis["basissets"]
+    forbidden = [('bmk', 'aug-cc-pVDZ'), ('b3-lyp', 'aug-cc-pVDZ'), ('b3-lyp', '6-311++G**'), ('pbe0', 'aug-cc-pVDZ'), ('pbe0', '6-311++G**'), ('tpssh', 'aug-cc-pVDZ'), ('tpssh', '6-311++G**'), ('m06-2x', 'aug-cc-pVDZ'), ('m06-2x', '6-311++G**')]
 
     dft_flavours = []
     index = 1
     for f in functionals:
         for b in basissets:
-            t = {
-                "number": str(index),
-                "functional": f,
-                "basisset": b,
-                "num_molecules": num_molecules
-            }
-            dft_flavours.append(t)
-            index += 1
+            if (f, b) not in forbidden:
+                t = {
+                    "number": str(index),
+                    "functional": f,
+                    "basisset": b,
+                    "num_molecules": num_molecules
+                }
+                dft_flavours.append(t)
+                index += 1
 
     num_flavours = len(dft_flavours)
     print(f"Found {num_flavours} flavours")
