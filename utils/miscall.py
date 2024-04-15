@@ -15,29 +15,25 @@ AToBohr = 1.889725989
 HToeV = 27.211399
 
 def check_basis_and_func(basis_todo, func_todo, path_to_control):
-    func = None
-    basis = None
+    ''' Verifies if the functional and basis set in the control file of Turbomole are the same as the one passed in the code'''
+
+    func, basis = None, None
     for line in open(path_to_control, "r"):
         if "functional" in line:
             func = line.split()[1]
         elif "basis =" in line and basis is None:
             basis = line.split()[2]
+
     if basis is None:
         warnings.warn(f"Warning: No basis found in control file! (Path to control: {path_to_control})")
-        #exit(f"No basis found in control file! (Path to control: {path_to_control})")
     if func is None:
         warnings.warn(f"Warning: No functional found in control file! (Path to control: {path_to_control})")
-        #exit(f"No functional found in control file! (Path to control: {path_to_control})")
     if basis != basis_todo:
         warnings.warn(f"Warning: Wrong basis in control file: Expected {basis_todo} but found {basis}!"
                       f" (Path to control: {path_to_control})")
-        #exit(f"Wrong basis in control file: Expected {basis_todo} but found {basis}! (Path to control: {path_to_control})")
     if func != func_todo:
         warnings.warn(f"Warning: Wrong functional in control file: Expected {func_todo} but found {func}! "
                       f"(Path to control: {path_to_control})")
-        #exit("Wrong functional is control file: Expected %s but found %s" % (func_todo, func))
-
-    print(f"basis and functional seems to be correct for {path_to_control}")
    
 
 def try_mkdir(dirname):
@@ -50,7 +46,7 @@ def try_mkdir(dirname):
 
 def copy_dir_contents_to_dir(in_directory, out_directory, dir_to_copy):
     try:
-        # We copy all files in in_directory to out_directory without following directories recursively:
+        # copy all files from in_directory to out_directory without following directories recursively:
         file_with_dir = "%s/%s" % (in_directory, dir_to_copy)
         if os.path.exists(file_with_dir):
             shutil.copytree(file_with_dir, "%s/%s" % (out_directory, dir_to_copy))

@@ -19,21 +19,21 @@ AToBohr = 1.889725989
 HToeV = 27.211399
 
 def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=False, h20=False):
-    print(f"settings passed are {settings}")
-    print(f"all of the variables are: charge: {charge}, unp_ele: {unp_el}, h20: {h20}")
+    ''' Prepares the input, runs the Turbomole calculation, and exports results'''
 
     if opt and grad:
         exit("opt and grad are exclusive")
     if hess and grad:
         exit("hess and grad are exclusive")
-
     if hess or grad:
         if len(freeze)!=0:
             print("WARNING: please test the combination of hess/grad and freeze carefully")
 
+    # define the name of temporary directory for calculations
     current_datetime = datetime.datetime.now().strftime("%d.%m_%H:%M:%S")
     rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
     
+    # if the name is taken, find a new one
     while os.path.exists(rundir):
         print(f"chosen dft_tmpdir already exists. creating a new one...")
         rundir=f"dft_tmpdir_{current_datetime}_{uuid.uuid4().hex}"
@@ -42,15 +42,13 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
     startdir = os.getcwd() 
     os.chdir(rundir) 
     
-    print("Starting to prepare input")
+    # prepare the input coord file for Turbomole
     PrepTMInputNormal(".", coords, elements)
     
-    # run calculation
-    print("Starting to run TM calculation")
+    # run the calculation
     RunTMCalculation(".", settings, charge, uhf = unp_el, disp = dispersion, pop = partial_chrg, water = h20)
     
     # read out results  
-    print("TM calculation converged, reading out the results")  
     if opt:
         os.system("t2x coord > opt.xyz")
         coords_new, elements_new = xtb.readXYZ("opt.xyz")
@@ -67,26 +65,27 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=Fal
     else:
         hess, vibspectrum, reduced_masses = None, None, None
 
+    # extract total energy from eiger.out file
     e = getTMEnergies(".")[2]
 
+    # calculate partial charges
     if partial_chrg:
         partialcharges = getMullikans(outfilename = 'TM.out', noOfAtoms=len(coords))
     else:
         partialcharges = None
-    # read mull
     
     os.chdir(startdir)
 
+    # verify if the calculation has correct basis and functional
     path_to_control = os.path.join(rundir, "control")
     misc.check_basis_and_func(path_to_control=path_to_control, basis_todo=settings["turbomole_basis"],
                          func_todo=settings["turbomole_functional"])
 
-
+    # remove the temporary directory
     if settings["delete_calculation_dirs"]:
         os.system("rm -r %s" % (rundir))
 
     results = {"energy": e, "coords": coords_new, "elements": elements_new, "gradient": grad, "hessian": hess, "vibspectrum": vibspectrum, "reduced_masses": reduced_masses, 'partial_charges': partialcharges}
-    print("dft_calc results are: ", results)
 
     return(results)
 
@@ -95,14 +94,13 @@ def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = Fal
     startdir = os.getcwd()
     os.chdir(moldir)
     
-    #create define string
+    # create define string
     if uhf == None or uhf == 1:
         instring = prep_define_file_uhf_1(settings, charge)
-        
     if uhf == 3:
         instring = prep_define_file_uhf_3(settings, charge)
     
-    print("Starting to execute define string")
+    # execute define string
     ExecuteDefineString(instring)
     
     # add functional to control file
@@ -125,8 +123,7 @@ def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = Fal
         else:
             print("WARNING: Did not find old mos file in %s/pre_optimization"%(settings["main_directory"]))
     
-    # do calculation  
-    print("Got to the terminal interaction part of TM!")   
+    # do calculation    
     if settings["turbomole_method"]=="ridft":
         os.system("ridft > TM.out")
         #os.system("rdgrad > rdgrad.out")    ###removed grad
@@ -136,6 +133,7 @@ def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = Fal
     else:
         exit("ERROR in turbomole_method: %s"%(settings["turbomole_method"]))
 
+    # check if the calculation converged
     finished=False   
     number_of_iterations=None
     for line in open("TM.out","r"):
@@ -158,6 +156,8 @@ def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = Fal
 #------------------------------------------------------------------preparation functions
 
 def PrepTMInputNormal(moldir, coords, elements):
+    ''' Creates the input coord file for Turbomole'''
+
     coordfile = open("%s/coord"%(moldir), 'w')
     coordfile.write("$coord \n")
     for idx, atom in enumerate(coords):
@@ -254,7 +254,6 @@ def add_functional_to_control(file_path, func):
                     line = line.replace('b-p', func)
                 file.write(line)
 
-        #print(f"Text 'b-p' replaced with '{func}' in '{file_path}'")
 
     except FileNotFoundError:
         print(f"File '{file_path}' not found.")
@@ -320,9 +319,6 @@ def setulimit():
 #----------------------------------------------------read out calculation results
     
 def getTMEnergies(moldir):
-
-    print("current directory at the start of getTMEnergies function is ", os.getcwd())
-    print("moldir is defined as: ", moldir)
     try:
         eigerfile=open("%s/eiger.out"%(moldir),"r")
     except FileNotFoundError as err:

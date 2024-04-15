@@ -1,41 +1,29 @@
 import numpy as np
-import os
 import subprocess
+import os
 
 kcal_to_eV=0.0433641153
 kB=8.6173303e-5 #eV/K
-T=298.15
-kBT=kB*T
 AToBohr=1.889725989
 HToeV = 27.211399
+T=298.15
+kBT=kB*T
 
 #converts XYZ files into turbomole coordinates
 def x2t_command(infile, outfile, moldir):
-    startdir = os.getcwd() #gets the current working directory
-    os.chdir(moldir) #changes the directory to moldir
-    #accesses Turbomole, running the conversion command
+    startdir = os.getcwd()
+    os.chdir(moldir) 
+
+    # run the Turbomole the conversion command
     subprocess.run("x2t {} > {}".format(infile, outfile), shell=True) 
-    os.chdir(startdir) #goes back to the firs working directory
+    os.chdir(startdir) 
 
-def readXYZ(filename):
-    infile=open(filename,"r")
-    coords=[]
-    elements=[]
-    lines=infile.readlines()
-    if len(lines)<3:
-        exit("ERROR: no coordinates found in %s/%s"%(os.getcwd(), filename))
-    for line in lines[2:]:
-        elements.append(line.split()[0].capitalize())
-        coords.append([float(line.split()[1]),float(line.split()[2]),float(line.split()[3])])
-    infile.close()
-    coords=np.array(coords)
-    return coords,elements
-
-
+# for normal xyz files
 def readXYZs(filename):
-    infile=open(filename,"r")
-    coords=[[]]
-    elements=[[]]
+    ''' Reads multiple molecules from a xyz file. '''
+    infile = open(filename,"r")
+    coords = [[]]
+    elements = [[]]
     for line in infile.readlines():
         words = line.split()
 
@@ -45,15 +33,15 @@ def readXYZs(filename):
         elif len(line.split())==4:
             elements[-1].append(line.split()[0].capitalize())
             coords[-1].append([float(line.split()[1]),float(line.split()[2]),float(line.split()[3])])
+
     infile.close()
     return coords,elements
 
-
 def readXYZs_with_charges(filename):
+    ''' Reads multiple molecules from a xyz file containing the charge of the molecules next to the atoms count. '''
+
     infile=open(filename,"r")
-    coords=[]
-    elements=[]
-    charges = []
+    coords, elements, charges = [], [], []
 
     for line in infile.readlines():
         words = line.split()
@@ -62,7 +50,6 @@ def readXYZs_with_charges(filename):
             coords.append([])
             elements.append([])
             charges.append(words[1])
-
         elif len(words)==4:
             elements[-1].append(words[0].capitalize())
             coords[-1].append([float(line.split()[1]), float(line.split()[2]), float(line.split()[3])])
@@ -70,9 +57,10 @@ def readXYZs_with_charges(filename):
     infile.close()
     return coords, elements, charges
 
-#Adrian's one
 def exportXYZ(coords, elements, filename, mask=[]):
-    outfile=open(filename, "w")
+    ''' Saves the information about molecules in one xyz file'''
+
+    outfile = open(filename, "w")
 
     if len(mask)==0:
         outfile.write("%i\n\n"%(len(elements)))
@@ -85,8 +73,10 @@ def exportXYZ(coords, elements, filename, mask=[]):
             outfile.write("%s %f %f %f\n"%(elements[atomidx].capitalize(),atom[0],atom[1],atom[2]))
     outfile.close()
 
-#Marlen's one
+
 def exportXYZs_with_charges(coords, elements, charges, filename):
+    ''' Saves the information about molecules in one xyz file containing charge value next to the atoms count'''
+
     outfile = open(filename, "a")
     
     for i in range(len(coords)):
@@ -97,11 +87,27 @@ def exportXYZs_with_charges(coords, elements, charges, filename):
 
     outfile.close()
 
-#filename = name of XYZ output file
+
+#for the xtb calculations
+def readXYZ(filename):
+    infile = open(filename,"r")
+    coords, elements = [], []
+    lines = infile.readlines()
+
+    if len(lines)<3:
+        exit("ERROR: no coordinates found in %s/%s"%(os.getcwd(), filename))
+    for line in lines[2:]:
+        elements.append(line.split()[0].capitalize())
+        coords.append([float(line.split()[1]),float(line.split()[2]),float(line.split()[3])])
+
+    infile.close()
+    coords = np.array(coords)
+    return coords,elements
+
 def a2bohr_exportXYZ(coords, elements, filename):
     #coords = coords*AToBohr
-    outfile = open(filename, "w") #creates a new file or truncates an existing one
-    outfile.write("%i\n\n"%(len(elements))) #first the number of elements, then a blank line
+    outfile = open(filename, "w") 
+    outfile.write("%i\n\n"%(len(elements)))
     for atomidx,atom in enumerate(coords):
         outfile.write("%s %f %f %f\n"%(elements[atomidx].capitalize(), atom[0]* AToBohr, atom[1]* AToBohr, atom[2]* AToBohr))
     outfile.close()
