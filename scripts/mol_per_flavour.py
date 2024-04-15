@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-results_path = '/hkfs/work/workspace/scratch/mt4181-dft/small_db/results/tasks'
+results_path = '/hkfs/work/workspace/scratch/mt4181-dft/final_db/results/tasks'
 
 flavours = []
 report = []
