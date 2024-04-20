@@ -4,7 +4,7 @@ import shutil
 import json
 import os
 
-from parallel_qm import calculate_energies_for_task
+from parallel_qm import calculate_energies_for_category
 
 
 def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
@@ -42,7 +42,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
 
         # calculate energies
         print("Calculating energies...")
-        energies = calculate_energies_for_task(path_to_task=flavour_todo_path,
+        energies = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
                                                base_settings=base_settings,
                                                number_of_workers=num_workers)
         
