@@ -5,6 +5,7 @@ import json
 import os
 
 from parallel_qm import calculate_energies_for_category
+from utils.xyz_utils import export_forces, readXYZs
 
 
 def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
@@ -36,29 +37,31 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
 
     for flavour_todo in all_flavours_todo_paths:
 
-        #fl_num = flavour_todo[3:4] - to be implemented later, for now the name is fixed with 01
+        #fl_num = flavour_todo[3:4] - to be implemented later, for now the name is fixed
         flavour_todo_path = os.path.join(flavours_dir, flavour_todo)
         flavour_done_path = os.path.join(results_dir, flavour_todo)
 
         # calculate energies
         print("Calculating energies...")
-        energies, gradients = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
+        energies, forces = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
                                                base_settings=base_settings,
                                                number_of_workers=num_workers)
-        
-        print("----------------------gradients are----------------------")
-        print(gradients)      
 
         # define the results names and paths
-        results_file_name = f"final_energies_01.npy"
+        results_file_name = f"final_energies.npy"
+        forces_file_name = f"final_forces.xyz"
         results_file_path = os.path.join(flavour_done_path, results_file_name)
+        forces_file_path = os.path.join(flavour_done_path, forces_file_name)
         results_file_path_in_flavours_dir = os.path.join(flavour_todo_path, results_file_name)
+        forces_file_path_in_flavours_dir = os.path.join(flavour_todo_path, forces_file_name)
 
         # if results file exists, append the results there
-        if os.path.exists(results_file_path):
-            print(f"File {results_file_name} has been found in {flavour_done_path}, appending the results there...")
+        if os.path.exists(results_file_path) and os.path.exists(forces_file_path):
+            print(f"Files {results_file_name} and {forces_file_path} have been found in {flavour_done_path}, appending the results there...")
 
             update_molecules_and_task_info(flavour_todo_path, flavour_done_path)
+            _, elements = readXYZs(find_file_path(flavour_todo_path, 'data'))
+            export_forces(forces, elements, forces_file_path)
             existing_energies = np.load(results_file_path)
             energies = np.array(energies)
             energies = np.concatenate((existing_energies, energies))
@@ -75,6 +78,9 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
         else:
             # save the results in a new file
             print(f"File {results_file_name} has not been found. Creating a new one...")
+            _, elements = readXYZs(find_file_path(flavour_todo_path, 'data'))
+            export_forces(forces, elements, forces_file_path)
+
             np.save(results_file_path_in_flavours_dir, energies)
             shutil.move(flavour_todo_path, flavour_done_path)
     
@@ -88,10 +94,10 @@ def update_molecules_and_task_info(source_dir, destination_dir):
     '''
 
     # find correct molecules and task files
-    existing_molecules_path = find_file_path(destination_dir, '.xyz')
-    molecules_to_append_path = find_file_path(source_dir, '.xyz')
-    existing_info_path = find_file_path(destination_dir, 'info.json')
-    info_to_append_path = find_file_path(source_dir, 'info.json')
+    existing_molecules_path = find_file_path(destination_dir, 'data')
+    molecules_to_append_path = find_file_path(source_dir, 'data')
+    existing_info_path = find_file_path(destination_dir, 'task_info.json')
+    info_to_append_path = find_file_path(source_dir, 'task_info.json')
 
     # read in the molecules data and append to the existing file
     with open(molecules_to_append_path, 'r') as src_file:
@@ -131,7 +137,7 @@ def find_file_path(path_to_search, norm_expression):
     '''
     target_file_path = None
     for file in os.listdir(path_to_search):
-        if file.endswith(norm_expression):
+        if file.startswith(norm_expression):
             target_file_path = os.path.join(path_to_search, file)
             break
     if target_file_path is None:
