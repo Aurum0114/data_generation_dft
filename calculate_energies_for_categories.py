@@ -5,7 +5,7 @@ import json
 import os
 
 from parallel_qm import calculate_energies_for_category
-from utils.xyz_utils import export_forces, readXYZs
+from utils.xyz_utils import export_forces, readXYZs_with_charges
 
 
 def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
@@ -59,13 +59,14 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
         if os.path.exists(results_file_path) and os.path.exists(forces_file_path):
             print(f"Files {results_file_name} and {forces_file_path} have been found in {flavour_done_path}, appending the results there...")
 
-            update_molecules_and_task_info(flavour_todo_path, flavour_done_path)
-            _, elements = readXYZs(find_file_path(flavour_todo_path, 'data'))
+            _, elements, _ = readXYZs_with_charges(find_file_path(flavour_todo_path, 'data'))
             export_forces(forces, elements, forces_file_path)
             existing_energies = np.load(results_file_path)
             energies = np.array(energies)
             energies = np.concatenate((existing_energies, energies))
             np.save(results_file_path, energies)
+
+            update_molecules_and_task_info(flavour_todo_path, flavour_done_path)
             
             # if there are any leftover files, move them to the results directory
             for item in os.listdir(flavour_todo_path):
@@ -78,7 +79,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
         else:
             # save the results in a new file
             print(f"File {results_file_name} has not been found. Creating a new one...")
-            _, elements = readXYZs(find_file_path(flavour_todo_path, 'data'))
+            _, elements, _ = readXYZs_with_charges(find_file_path(flavour_todo_path, 'data'))
             export_forces(forces, elements, forces_file_path_in_flavours_dir)
 
             np.save(results_file_path_in_flavours_dir, energies)
