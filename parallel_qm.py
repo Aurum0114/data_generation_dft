@@ -57,9 +57,9 @@ def calculate_energies_for_category(path_to_flavour, base_settings, number_of_wo
 
     startdir = os.getcwd()
     os.chdir(temp_flavour_folder_path)
-    energies = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
+    energies, gradients = calc_energies_for_items(items, number_of_workers=number_of_workers, coords_all=coords_all)
     os.chdir(startdir)
-    return energies
+    return energies, gradients
 
 
 def calc_energies_for_items(items, number_of_workers, coords_all):
@@ -75,7 +75,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
 
         # iterate results
         energies_all = []
-        # gradients_all = []
+        gradients_all = []
         for molidx, results_here in enumerate(results):
             print("Got result: {}".format(results_here["energy"]), flush=True)
             # sanity check:
@@ -87,12 +87,12 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
                 results_here["energy"] = None
                 results_here["gradient"] = None
             energies_all.append(results_here["energy"])
-            # gradients_all.append(results_here["gradient"].tolist())
+            gradients_all.append(results_here["gradient"].tolist())
         
         pool.close()
         pool.join()
     # process pool is closed automatically
-    return energies_all
+    return energies_all, gradients_all
 
 
 def qm_task(identifier, data):

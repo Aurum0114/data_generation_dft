@@ -42,10 +42,13 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
 
         # calculate energies
         print("Calculating energies...")
-        energies = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
+        energies, gradients = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
                                                base_settings=base_settings,
                                                number_of_workers=num_workers)
         
+        print("----------------------gradients are----------------------")
+        print(gradients)      
+
         # define the results names and paths
         results_file_name = f"final_energies_01.npy"
         results_file_path = os.path.join(flavour_done_path, results_file_name)
