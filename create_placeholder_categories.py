@@ -35,7 +35,8 @@ def create_placeholder_categories(flavour_file, xyz_files_dir, temp_cat_dir, num
     # define the flavours to skip (e.g. too computationally expensive ones)
     forbidden = [('bmk', 'aug-cc-pVDZ'), ('b3-lyp', 'aug-cc-pVDZ'), ('b3-lyp', '6-311++G**'),
                 ('pbe0', 'aug-cc-pVDZ'), ('pbe0', '6-311++G**'), ('tpssh', 'aug-cc-pVDZ'),
-                ('tpssh', '6-311++G**'), ('m06-2x', 'aug-cc-pVDZ'), ('m06-2x', '6-311++G**')]
+                ('tpssh', '6-311++G**'), ('m06-2x', 'aug-cc-pVDZ'), ('m06-2x', '6-311++G**'),
+                ('bmk', '6-311++G**'), ('bh-lyp', '6-311++G**'), ('bh-lyp', 'aug-cc-pVDZ')]
 
     # create the dictionary storing each flavour and its index
     dft_flavours = []
