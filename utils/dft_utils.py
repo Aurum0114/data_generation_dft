@@ -18,7 +18,7 @@ kBT = kB * T
 AToBohr = 1.889725989
 HToeV = 27.211399
 
-def dft_calc(settings, coords, elements, charge, opt=False, grad=False, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=False, h20=False):
+def dft_calc(settings, coords, elements, charge, opt=False, grad=True, hess=False, freeze=[], partial_chrg=False, unp_el=1, dispersion=False, h20=True):
     ''' Prepares the input, runs the Turbomole calculation, and exports results'''
 
     if opt and grad:
@@ -126,7 +126,7 @@ def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = Fal
     # do calculation    
     if settings["turbomole_method"]=="ridft":
         os.system("ridft > TM.out")
-        #os.system("rdgrad > rdgrad.out")    ###removed grad
+        os.system("rdgrad > rdgrad.out")    ###to test if it works
     elif settings["turbomole_method"]=="dscf":
         os.system("dscf > TM.out")
         #os.system("rdgrad > rdgrad.out")
@@ -343,15 +343,19 @@ def getTMEnergies(moldir):
 def read_dft_grad():
     if not os.path.exists("gradient"):
         return(None)
+    
     grad = []
     for line in open("gradient","r"):
         if len(line.split())==3 and "grad" not in line:
             line = line.replace("D","E")
             grad.append([float(line.split()[0]), float(line.split()[1]), float(line.split()[2])])
+
     if len(grad)==0:
         grad=None
     else:
         grad = np.array(grad)*HToeV*AToBohr
+        grad = grad * (-1.0)
+
     return(grad)
 
 def read_dft_hess():
