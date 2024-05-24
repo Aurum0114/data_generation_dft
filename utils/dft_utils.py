@@ -90,7 +90,7 @@ def dft_calc(settings, coords, elements, charge, opt=False, grad=True, hess=Fals
     return(results)
 
 
-def RunTMCalculation(moldir, settings, charge, uhf = None, disp=False, pop = False, water = False):
+def RunTMCalculation(moldir, settings, charge, uhf = None, disp = False, pop = False, water = False):
     startdir = os.getcwd()
     os.chdir(moldir)
     
