@@ -87,6 +87,19 @@ def exportXYZs_with_charges(coords, elements, charges, filename):
 
     outfile.close()
 
+def export_forces(forces, elements, filename):
+    ''' Saves the information about forces in one xyz file '''
+
+    outfile = open(filename, "a")
+    
+    for i in range(len(forces)):
+        outfile.write(f"{len(elements[i])} \n")
+
+        for atomidx, force in enumerate(forces[i]):
+            outfile.write(f"{elements[i][atomidx].capitalize()} {force[0]} {force[1]} {force[2]}\n")
+        outfile.write("\n")
+
+    outfile.close()
 
 #for the xtb calculations
 def readXYZ(filename):
