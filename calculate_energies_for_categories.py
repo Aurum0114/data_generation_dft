@@ -79,7 +79,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
             # save the results in a new file
             print(f"File {results_file_name} has not been found. Creating a new one...")
             _, elements = readXYZs(find_file_path(flavour_todo_path, 'data'))
-            export_forces(forces, elements, forces_file_path)
+            export_forces(forces, elements, forces_file_path_in_flavours_dir)
 
             np.save(results_file_path_in_flavours_dir, energies)
             shutil.move(flavour_todo_path, flavour_done_path)
