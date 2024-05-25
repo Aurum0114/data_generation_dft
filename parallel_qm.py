@@ -78,6 +78,7 @@ def calc_energies_for_items(items, number_of_workers, coords_all):
         gradients_all = []
         for molidx, results_here in enumerate(results):
             print("Got result: {}".format(results_here["energy"]), flush=True)
+            print(f"gradients have length {len(results_here['gradient'])}")
             # sanity check:
             coords_i = items[molidx][1][0]
             assert coords_all[molidx] == coords_i

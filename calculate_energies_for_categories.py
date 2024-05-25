@@ -46,6 +46,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
         energies, forces = calculate_energies_for_category(path_to_flavour=flavour_todo_path,
                                                base_settings=base_settings,
                                                number_of_workers=num_workers)
+        print(f"main script returned forces len {len(forces)}")
 
         # define the results names and paths
         results_file_name = f"final_energies.npy"
@@ -80,6 +81,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
             # save the results in a new file
             print(f"File {results_file_name} has not been found. Creating a new one...")
             _, elements, _ = readXYZs_with_charges(find_file_path(flavour_todo_path, 'data'))
+            print(f"creating new forces file, we have {len(forces)} forces and {len(elements)} molecules")
             export_forces(forces, elements, forces_file_path_in_flavours_dir)
 
             np.save(results_file_path_in_flavours_dir, energies)
