@@ -341,7 +341,7 @@ def getTMEnergies(moldir):
 
 def read_dft_grad():
     if not os.path.exists("gradient"):
-        return []
+        return np.array([])
     
     grad = []
     for line in open("gradient","r"):
@@ -350,7 +350,7 @@ def read_dft_grad():
             grad.append([float(line.split()[0]), float(line.split()[1]), float(line.split()[2])])
     
     if len(grad) == 0:
-        return []
+        return np.array([])
     else:
         grad = np.array(grad) * HToeV * AToBohr
         grad = grad * (-1.0)
