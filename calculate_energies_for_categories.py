@@ -47,6 +47,7 @@ def calculate_energies_for_categories(flavours_dir, results_dir, num_workers):
                                                base_settings=base_settings,
                                                number_of_workers=num_workers)
         print(f"main script returned forces len {len(forces)}")
+        print(forces)
 
         # define the results names and paths
         results_file_name = f"final_energies.npy"
