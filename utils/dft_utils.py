@@ -204,7 +204,6 @@ def prep_define_file_uhf_1(dft_settings, charge):
     returnstring = outfile.getvalue()
     outfile.close()
 
-    print("Define file is: ", returnstring)
     return returnstring
 
 def prep_define_file_uhf_3(dft_settings, charge):
@@ -342,21 +341,21 @@ def getTMEnergies(moldir):
 
 def read_dft_grad():
     if not os.path.exists("gradient"):
-        return(None)
+        return []
     
     grad = []
     for line in open("gradient","r"):
-        if len(line.split())==3 and "grad" not in line:
+        if len(line.split()) == 3 and "grad" not in line:
             line = line.replace("D","E")
             grad.append([float(line.split()[0]), float(line.split()[1]), float(line.split()[2])])
-
-    if len(grad)==0:
-        grad=None
+    
+    if len(grad) == 0:
+        return 0
     else:
-        grad = np.array(grad)*HToeV*AToBohr
+        grad = np.array(grad) * HToeV * AToBohr
         grad = grad * (-1.0)
 
-    return(grad)
+    return grad
 
 def read_dft_hess():
     hess = None
