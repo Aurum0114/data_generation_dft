@@ -90,6 +90,8 @@ def exportXYZs_with_charges(coords, elements, charges, filename):
 def export_forces(forces, elements, filename):
     ''' Saves the information about forces in one xyz file '''
     print(f"exporting {len(forces)} forces for {len(elements)} elements")
+    for f in forces:
+        print(f)
 
     outfile = open(filename, "a")
     assert len(forces) == len(elements), "more forces than molecules are returned"
