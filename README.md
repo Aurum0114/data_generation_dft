@@ -10,17 +10,18 @@ Added functionalities include:
 
 ### Installation on HoreKa
 1) Create a conda environment with packages included in the environment.yaml file:
-'''
+```
 conda env create -f environment.yaml
-'''
+```
 
-2) Install Turbomole 7.5.1. For version 7.7.1 there is an issue with paralellisation: there are a few lines of code that create temporaty directories for calculations which is something that our code already takes care of, leading to interference that disrupts calculations. This issue might possibly also occur for other, newer Turbomole versions.
+2) Install Turbomole 7.5.1
+Warning: for version 7.7.1 there is an issue with paralellisation: there are a few lines of code that create temporaty directories for calculations which is something that our code already takes care of, leading to interference that disrupts calculations. This issue might possibly also occur for other, newer Turbomole versions.
 
 ## Generating Placeholder Categories
 
 In this context, placeholder category indicates a folder designated with one DFT flavour, containing the following files:
 - sampled data in one xyz file, one molecule under another
-- "task_info.json" file, containing the settings for the calculation (basis set and flavour) and the number of molecules
+- `task_info.json` file, containing the settings for the calculation (basis set and flavour) and the number of molecules
 
 To execute the create_placeholder_categories.py file, adjust the paths in scripts/test_script_cat and use sbatch command to schedule it on the cluster.  
 The last, optional argument 'flavour_idx' allows for choosing only one flavour to be generated.
