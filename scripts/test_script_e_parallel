@@ -21,7 +21,7 @@ module load TM
 export PARNODES=1
 export PYTHONPATH=~/dft_data_generation/
 export PYTHONPATH=~/dft_data_generation/utils/
-code_path = <code_path>
+code_path=<code_path>
 
 python $code_path/calculate_energies_for_categories.py \
 <categories_path>/$folder_name \
