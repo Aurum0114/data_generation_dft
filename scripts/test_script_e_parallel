@@ -1,0 +1,31 @@
+#!/bin/bash
+
+for i in {1..<number of all flavours>}; do
+    folder_name=$(printf "flv%03d" "$i")
+    
+    sbatch <<EOF
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=76
+#SBATCH --time=3-00:00:00
+#SBATCH --partition=cpuonly
+#SBATCH --output=log/job%j_flv${i}.output
+#SBATCH --error=log/job%j_flv${i}.error
+#SBATCH --job-name=flv${i}
+
+source <conda.sh_path>
+conda activate dft_data_generation
+
+export PARA_ARCH=serial
+module load TM
+export PARNODES=1
+export PYTHONPATH=~/dft_data_generation/
+export PYTHONPATH=~/dft_data_generation/utils/
+code_path = <code_path>
+
+python $code_path/calculate_energies_for_categories.py \
+<categories_path>/$folder_name \
+<results_path> \
+<number_of_workers>
+EOF
+done
