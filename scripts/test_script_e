@@ -1,22 +1,23 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
 #SBATCH --time=20:00:00
-#SBATCH --partition=cpuonly
+#SBATCH --partition=<parition_name>
 #SBATCH --output=log/job%j.output
 #SBATCH --error=log/job%j.error
-#SBATCH --job-name=twoinputsradicals
+#SBATCH --job-name=<name>
 
-source ~/anaconda3/etc/profile.d/conda.sh
+source <conda.sh_path>
 
 conda activate dft_data_generation
-
 export PARA_ARCH=serial
-
 module load TM
-
 export PARNODES=1
 
 export PYTHONPATH=~/dft_data_generation/
 export PYTHONPATH=~/dft_data_generation/utils/
+code_path=<code_path>
 
-python /home/hk-project-aimat2/mt4181/data_generation_dft/calculate_energies_for_categories.py /hkfs/work/workspace/scratch/mt4181-dft/dipeptides_test/categories /hkfs/work/workspace/scratch/mt4181-dft/dipeptides_test/results 2
+python $code_path/calculate_energies_for_categories.py \
+<categories_path> \
+<results_path> \
+<number_of_workers>
