@@ -2,18 +2,20 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
 #SBATCH --time=00:30:00
-#SBATCH --partition=dev_cpuonly
+#SBATCH --partition=<partition_name>
 #SBATCH --output=log/job%j.output
 #SBATCH --error=log/job%j.error
-#SBATCH --job-name=all_flav_ammonia
+#SBATCH --job-name=<name>
 
-source /opt/bwhpc/common/devel/miniconda3/etc/profile.d/conda.sh
-
+source <conda.sh path>
 conda activate dft_data_generation
-
 module load chem/turbomole/7.7.1
 
 export PYTHONPATH=~/dft_data_generation/
 export PYTHONPATH=~/dft_data_generation/utils/
 
-python /home/hk-project-aimat2/mt4181/data_generation_dft/create_placeholder_categories.py /home/hk-project-aimat2/mt4181/data_generation_dft/input_files/small_flavours.json /home/hk-project-aimat2/mt4181/data_generation_dft/input_files/Ala_cap_rad.xyz /hkfs/work/workspace/scratch/mt4181-dft/dipeptides_test/categories 2
+python create_placeholder_categories.py \
+<flavours.json path> \
+<dataset with xyz files path> \
+<path to store the results (placeholder categories) in> \
+<number of molecules to sample per datatype per flavour> 
