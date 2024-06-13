@@ -37,7 +37,7 @@ If more parallelization is required, each flavour can be run as a separate batch
 
 ## Postprocessing
 
-Calculations that did not converge are still included in ther results files. For energies, nonconverges results are equal to 0, whereas for forces: [0, 0, 0]. It is assumed that the postprocessing is included in the ML part. 
+Calculations that did not converge are still included in ther results files. For energies, nonconverged results are equal to 0, whereas for forces: [0, 0, 0]. It is assumed that the postprocessing is included in the ML part. 
 
 ## Roadmap
 
