@@ -16,7 +16,7 @@ conda env create -f environment.yaml
 
 2) Install Turbomole 7.5.1 
 
-Warning: for version 7.7.1 there is an issue with paralellisation: there are a few lines of code that create temporaty directories for calculations which is something that our code already takes care of, leading to interference that disrupts calculations. This issue might possibly also occur for other, newer Turbomole versions.
+Warning: for version 7.7.1 there is an issue with paralellisation - there are a few lines of code that create temporary directories for calculations, which is something that our code already takes care of, leading to interference that disrupts calculations. This issue might possibly also occur for other, newer Turbomole versions.
 
 ## Generating Placeholder Categories
 
@@ -30,7 +30,9 @@ The last, optional argument `flavour_idx` allows for choosing only one flavour t
 ## Calculating Energies for Categories
 
 This code reads in the data from placeholder categories and employs Turbomole to calculate energies for each category using appropriate DFT flavour.
+
 The simplest way to run is to adjust the paths in `scripts/test_script_e` and use sbatch command to schedule it on the cluster. The code can be executed repeatedly, as it automatically detects if there are previously created results files and appends current results to them.
+
 If more parallelization is required, each flavour can be run as a separate batch job. To achieve than, adjust the paths in `scripts/test_script_e_parallel` and use the `bash test_script_e_parallel` command to automatically schedule X jobs, where X = number of all flavours. 
 
 ## Postprocessing
